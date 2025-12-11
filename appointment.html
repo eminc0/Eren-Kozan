@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Randevu Oluştur | Eren Kozan</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* --- 1. ORTAK PREMIUM STİLLER --- */
+:root { --creme-bg: #f9f7f2; --gold-accent: #c5a059; --dark-text: #1a1a1a; --white: #ffffff; --success: #27ae60; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background-color: var(--creme-bg); color: var(--dark-text); line-height: 1.6; overflow-x: hidden; position: relative; }
+
+/* ARKA PLAN */
+#bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4; pointer-events: none; }
+
+/* NAV BAR */
+nav { position: sticky; top: 0; width: 100%; background: #1a1a1a; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+nav .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: transform 0.3s ease; }
+nav .logo-container:hover { transform: scale(1.05); }
+.logo-img { height: 40px; width: auto; filter: drop-shadow(0 0 5px rgba(197, 160, 89, 0.8)); }
+.logo-text { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 0 6px rgba(197, 160, 89, 0.9); }
+nav .nav-links { margin-right: 50px; display: flex; align-items: center; gap: 20px; }
+nav .nav-links a { font-family: 'Inter', sans-serif; font-weight: 700; color: #fff; padding: 6px 14px; border-radius: 8px; text-decoration: none; text-transform: uppercase; position: relative; transition: color 0.3s ease; font-size: 14px; }
+nav .nav-links a::after { content: ""; display: block; width: 0%; height: 2px; background: var(--gold-accent); position: absolute; bottom: 0; left: 0; transition: width 0.3s ease; }
+nav .nav-links a:hover::after { width: 100%; }
+nav .nav-links a:hover { color: var(--gold-accent); }
+nav .nav-links a.active { color: var(--gold-accent); }
+@media (max-width: 900px) { nav { flex-direction: column; padding: 15px; } nav .nav-links { justify-content: center; margin-top: 10px; margin-right: 0; flex-wrap: wrap; } }
+
+/* RANDEVU SİHİRBAZI */
+.booking-section { min-height: 90vh; display: flex; justify-content: center; align-items: flex-start; padding: 60px 20px 100px 20px; position: relative; z-index: 10; }
+.booking-container { width: 100%; max-width: 800px; background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-accent); border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.08); overflow: hidden; position: relative; backdrop-filter: blur(8px); }
+.booking-header { background: var(--dark-text); padding: 40px 20px; text-align: center; position: relative; overflow: hidden; }
+.booking-header h2 { font-family: 'Cinzel', serif; color: #fff; margin: 0; font-size: 32px; letter-spacing: 2px; position: relative; z-index: 2; }
+.booking-header p { color: var(--gold-accent); margin-top: 10px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; position: relative; z-index: 2; }
+.booking-header::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background-image: repeating-linear-gradient(45deg, rgba(197, 160, 89, 0.1) 0, rgba(197, 160, 89, 0.1) 1px, transparent 1px, transparent 20px); z-index: 1; opacity: 0.3; }
+.progress-bar-container { background: #f4f4f4; height: 6px; width: 100%; position: relative; }
+.progress-bar { height: 100%; background: var(--gold-accent); width: 25%; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
+
+/* Steps */
+.step-content { padding: 40px; display: none; animation: fadeIn 0.5s ease; }
+.step-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.step-title { font-family: 'Cinzel', serif; font-size: 24px; color: var(--dark-text); margin-bottom: 10px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+.step-subtitle { display: block; font-size: 14px; color: #666; margin-bottom: 30px; font-style: italic; }
+
+/* ADIM 1: BERBER */
+.staff-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+.staff-radio { display: none; }
+.staff-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 120px; opacity: 0.6; transition: all 0.3s; }
+.staff-img-box { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 3px solid #eee; margin-bottom: 10px; transition: all 0.3s; background: #fff; }
+.staff-img-box img { width: 100%; height: 100%; object-fit: cover; }
+.staff-name { font-size: 14px; font-weight: 600; color: var(--dark-text); text-align: center; }
+.staff-radio:checked + .staff-card { opacity: 1; transform: scale(1.1); }
+.staff-radio:checked + .staff-card .staff-img-box { border-color: var(--gold-accent); box-shadow: 0 0 15px rgba(197, 160, 89, 0.4); }
+
+/* ADIM 2: HİZMET (MULTI) */
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+.service-checkbox { display: none; }
+.service-card { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 15px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; text-align: center; height: 100%; position: relative; }
+.service-card i { font-size: 32px; color: #ccc; margin-bottom: 15px; transition: color 0.2s; }
+.service-card h4 { font-size: 16px; font-weight: 600; margin: 0; color: #555; transition: color 0.2s; }
+.service-card .price { font-size: 14px; color: #999; margin-top: 5px; }
+.service-card::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 10px; right: 10px; color: var(--success); opacity: 0; transition: opacity 0.2s; }
+.service-checkbox:checked + .service-card { border-color: var(--gold-accent); box-shadow: 0 10px 25px rgba(197, 160, 89, 0.15); background: #fffdf5; transform: translateY(-3px); }
+.service-checkbox:checked + .service-card i { color: var(--gold-accent); }
+.service-checkbox:checked + .service-card h4 { color: var(--dark-text); }
+.service-checkbox:checked + .service-card .price { color: var(--gold-accent); font-weight: 700; }
+.service-checkbox:checked + .service-card::after { opacity: 1; }
+
+/* ADIM 3: TARİH & SAAT */
+.date-scroll-wrapper { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; }
+.date-radio { display: none; }
+.date-card { min-width: 80px; padding: 15px 10px; text-align: center; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s; background: #fff; }
+.date-card .day { font-size: 12px; text-transform: uppercase; color: #888; display: block; }
+.date-card .num { font-size: 20px; font-weight: 700; color: var(--dark-text); display: block; margin-top: 5px; font-family: 'Cinzel', serif; }
+.date-radio:checked + .date-card { background: var(--gold-accent); border-color: var(--gold-accent); color: #fff; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3); }
+.date-radio:checked + .date-card .day, .date-radio:checked + .date-card .num { color: #fff; }
+.time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px; }
+.time-radio { display: none; }
+.time-pill { padding: 10px; text-align: center; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-size: 14px; transition: all 0.2s; background: #fff; }
+.time-radio:checked + .time-pill { background: var(--dark-text); color: var(--gold-accent); border-color: var(--dark-text); }
+
+/* ADIM 4: ÖZET */
+.summary-box { background: #fdfdfd; border: 1px dashed var(--gold-accent); padding: 25px; border-radius: 8px; margin-bottom: 30px; }
+.summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 8px;}
+.summary-item:last-child { border-bottom: none; margin-bottom: 0; }
+.summary-item strong { color: var(--dark-text); }
+.summary-item span { color: #666; text-align: right; max-width: 60%; }
+.total-price { font-size: 18px; color: var(--gold-accent); font-weight: 800; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: var(--dark-text); }
+.form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 15px; transition: border 0.3s; }
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--gold-accent); box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1); }
+
+.wizard-footer { padding: 20px 40px 40px 40px; display: flex; justify-content: space-between; border-top: 1px solid #eee; }
+.btn-prev { padding: 12px 25px; border: 1px solid #ddd; background: #fff; color: #666; border-radius: 4px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+.btn-next { padding: 12px 35px; background: var(--gold-accent); border: none; color: #fff; border-radius: 4px; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3); }
+.btn-next:hover { background: #b08d4e; transform: translateY(-2px); }
+
+footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: center; border-top: 4px solid var(--gold-accent); margin-top: 50px; position: relative; z-index: 10; }
+.admin-access-link { color: #444; font-size: 12px; text-decoration: none; transition: color 0.3s ease; }
+.admin-access-link:hover { color: var(--gold-accent); }
+</style>
+</head>
+
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<i class="fas fa-scissors" style="display:none; font-family: 'Font Awesome 6 Free'; font-weight: 900;"></i>
+
+<nav>
+    <a href="index2.html" class="logo-container">
+        <span class="logo-text">EREN KOZAN</span>
+    </a>
+    <div class="nav-links">
+        <a href="employees.html">Çalışanlar</a>
+        <a href="products.html">Ürünler</a>
+        <a href="index.html#location">Konum</a>
+        <a href="appointment.html" class="active">Randevu</a>
+    </div>
+</nav>
+
+<section class="booking-section">
+    <div class="booking-container">
+        <div class="booking-header">
+            <h2>RANDEVU OLUŞTUR</h2>
+            <p>Size Özel Zaman Dilimi</p>
+        </div>
+        <div class="progress-bar-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+        <form id="appointmentForm">
+            <div class="step-content active" id="step1">
+                <h3 class="step-title">1. Uzmanınızı Seçin</h3>
+                <span class="step-subtitle">İşleminizi yapacak ustayı seçerek başlayın.</span>
+                <div class="staff-grid" id="staff-grid-container"><p style="color:#999;">Yükleniyor...</p></div>
+            </div>
+
+            <div class="step-content" id="step2">
+                <h3 class="step-title">2. Hizmet Seçimi</h3>
+                <span class="step-subtitle">Birden fazla hizmet seçebilirsiniz.</span>
+                <div class="services-grid" id="services-grid-container">
+                    <p style="text-align:center; color:#888;">Lütfen önce bir uzman seçiniz.</p>
+                </div>
+            </div>
+
+            <div class="step-content" id="step3">
+                <h3 class="step-title">3. Tarih ve Saat</h3>
+                <span class="step-subtitle">Size en uygun zamanı belirleyin. (Pazar günleri kapalıyız)</span>
+                <label style="display:block; margin-bottom:10px; font-weight:600;">Tarih:</label>
+                <div class="date-scroll-wrapper" id="date-container"></div>
+                <label style="display:block; margin-bottom:10px; font-weight:600;">Saat:</label>
+                <div class="time-grid" id="time-container"></div>
+                <input type="hidden" id="selectedDate" name="date">
+                <input type="hidden" id="selectedTime" name="time">
+            </div>
+
+            <div class="step-content" id="step4">
+                <h3 class="step-title">4. Bilgilerinizi Girin</h3>
+                <div class="summary-box">
+                    <div class="summary-item"><strong>Uzman:</strong> <span id="sum-staff">-</span></div>
+                    <div class="summary-item"><strong>Hizmetler:</strong> <span id="sum-service">-</span></div>
+                    <div class="summary-item"><strong>Tarih:</strong> <span id="sum-datetime">-</span></div>
+                    <div class="summary-item"><strong>Tahmini Süre:</strong> <span id="sum-duration">-</span></div>
+                    <div class="summary-item"><strong style="color:var(--gold-accent)">Toplam Tutar:</strong> <span class="total-price" id="sum-price">-</span></div>
+                </div>
+                <div class="form-group"><label>Adınız Soyadınız</label><input type="text" id="fullname" placeholder="Örn: Ahmet Yılmaz" required></div>
+                <div class="form-group"><label>Telefon Numaranız</label><input type="tel" id="phone" placeholder="5XX XXX XX XX" maxlength="10" pattern="[0-9]{10}" required><small style="color:#888; font-size:12px;">Başında 0 olmadan 10 hane giriniz.</small></div>
+                <div class="form-group"><label>Notunuz (Opsiyonel)</label><textarea id="note" rows="2" placeholder="Özel bir isteğiniz var mı?"></textarea></div>
+                <div class="form-group" style="display:flex; gap:10px; align-items:flex-start;"><input type="checkbox" id="kvkk" required style="width:20px; height:20px; margin-top:0;"><label for="kvkk" style="font-size:12px; font-weight:normal; line-height:1.4;">Randevu hatırlatmaları için aranmayı veya SMS almayı kabul ediyorum.</label></div>
+            </div>
+        </form>
+
+        <div class="wizard-footer">
+            <button type="button" class="btn-prev" id="prevBtn" style="visibility:hidden;" onclick="changeStep(-1)">Geri</button>
+            <button type="button" class="btn-next" id="nextBtn" onclick="changeStep(1)">Devam Et</button>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2025 Eren Kozan — Tüm Hakları Saklıdır</p>
+    <div class="admin-link-container"><a href="admin-login.html" class="admin-access-link"><i class="fas fa-lock"></i> Yönetici Girişi</a></div>
+</footer>
+
+<script>
+    // --- ✂️ UÇAN MAKASLAR (ARKA PLAN) ✂️ ---
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const particleCount = 20;
+
+    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+    
+    class ScissorParticle {
+        constructor() {
+            this.x = Math.random() * width; this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+            this.size = Math.random() * 25 + 15; this.rotation = Math.random() * Math.PI * 2;
+            this.rotationSpeed = (Math.random() - 0.5) * 0.02; this.opacity = Math.random() * 0.3 + 0.2; 
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy; this.rotation += this.rotationSpeed;
+            if (this.x < -50) this.x = width + 50; if (this.x > width + 50) this.x = -50;
+            if (this.y < -50) this.y = height + 50; if (this.y > height + 50) this.y = -50;
+        }
+        draw() {
+            ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+            ctx.font = "900 " + this.size + "px 'Font Awesome 6 Free'";
+            ctx.fillStyle = `rgba(180, 140, 70, ${this.opacity})`; 
+            ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText('\uf0c4', 0, 0); 
+            ctx.restore();
+        }
+    }
+    
+    function initParticles() { resize(); particles = []; for (let i = 0; i < particleCount; i++) { particles.push(new ScissorParticle()); } animateParticles(); }
+    function animateParticles() { ctx.clearRect(0, 0, width, height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+    window.addEventListener('resize', resize); document.fonts.ready.then(function () { initParticles(); });
+
+
+    // --- 📅 RANDEVU SİHİRBAZI MANTIĞI (SENIOR DOKUNUŞLAR) 📅 ---
+    
+    // MASTER HİZMET LİSTESİ
+    const ALL_SERVICES_INFO = {
+        'sac-kesim': { name: 'Saç Kesimi', defaultPrice: 800, duration: 45, icon: 'fas fa-cut' },
+        'sakal-tras': { name: 'Sakal Tıraşı', defaultPrice: 400, duration: 30, icon: 'fas fa-user-tie' },
+        'sac-sakal': { name: 'Saç & Sakal VIP', defaultPrice: 1000, duration: 75, icon: 'fas fa-crown' },
+        'cilt-bakim': { name: 'Cilt Bakımı', defaultPrice: 400, duration: 45, icon: 'fas fa-spa' },
+        'cocuk': { name: 'Çocuk Tıraşı', defaultPrice: 500, duration: 30, icon: 'fas fa-child' },
+        'fon': { name: 'Fön & Şekil', defaultPrice: 200, duration: 15, icon: 'fas fa-wind' },
+        'sac-duzlestirme': { name: 'Saç Düzleştirme', defaultPrice: 1500, duration: 90, icon: 'fas fa-stream' },
+        'sac-botoksu': { name: 'Saç Botoksu', defaultPrice: 400, duration: 60, icon: 'fas fa-flask' },
+        'agda': { name: 'Ağda (Bölgesel)', defaultPrice: 150, duration: 15, icon: 'fas fa-hand-sparkles' },
+        'kas-tasarimi': { name: 'Kaş Tasarımı', defaultPrice: 300, duration: 20, icon: 'fas fa-eye' }
+    };
+
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    // YARDIMCI: Saat String -> Dakika (14:30 -> 870)
+    function timeToMins(timeStr) {
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+    }
+
+    function changeStep(n) {
+        if (n === 1 && !validateStep(currentStep)) return;
+
+        if (currentStep === 1 && n === 1) { loadServicesForSelectedStaff(); }
+        
+        // Adım 3'e geçerken saatleri hesapla
+        if (currentStep === 2 && n === 1) { 
+            setTimeout(() => {
+                const firstDate = document.querySelector('.date-radio');
+                if(firstDate && !document.querySelector('input[name="date"]:checked')) {
+                    firstDate.click(); // İlk günü otomatik seç
+                } else {
+                    renderTimeSlots(); // Zaten seçiliyse saatleri yenile
+                }
+            }, 100);
+        }
+
+        if (currentStep === 3 && n === 1) { updateSummary(); }
+
+        document.getElementById(`step${currentStep}`).classList.remove('active');
+        currentStep += n;
+        document.getElementById(`step${currentStep}`).classList.add('active');
+
+        const progress = (currentStep / totalSteps) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+        
+        if (currentStep === totalSteps) {
+            nextBtn.textContent = 'Randevuyu Onayla';
+            nextBtn.onclick = submitForm;
+        } else {
+            nextBtn.textContent = 'Devam Et';
+            nextBtn.onclick = () => changeStep(1);
+        }
+    }
+
+    // --- ADIM 2: HİZMETLERİ GETİR ---
+    function loadServicesForSelectedStaff() {
+        const staffRadio = document.querySelector('input[name="staff"]:checked');
+        const staffId = staffRadio.value;
+        const staffContainer = document.getElementById('services-grid-container');
+        staffContainer.innerHTML = '';
+
+        const teamData = JSON.parse(localStorage.getItem('teamData')) || [];
+        const member = teamData.find(m => m.id === staffId);
+
+        if (member && member.services && member.services.length > 0) {
+            const uniqueServices = [...new Set(member.services)];
+            uniqueServices.forEach(serviceKey => {
+                const info = ALL_SERVICES_INFO[serviceKey];
+                if (info) {
+                    let finalPrice = info.defaultPrice;
+                    if(member.customPrices && member.customPrices[serviceKey]) {
+                        finalPrice = member.customPrices[serviceKey];
+                    }
+                    const html = `
+                        <label>
+                            <input type="checkbox" name="service" value="${serviceKey}" class="service-checkbox" data-price="${finalPrice}" data-duration="${info.duration}">
+                            <div class="service-card">
+                                <i class="${info.icon}"></i>
+                                <h4>${info.name}</h4>
+                                <span class="price">${finalPrice} ₺ / ${info.duration} Dk</span>
+                            </div>
+                        </label>
+                    `;
+                    staffContainer.innerHTML += html;
+                }
+            });
+        } else {
+            staffContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888;">Bu uzman için tanımlı hizmet bulunamadı. Lütfen Admin panelinden hizmet ekleyiniz.</p>';
+        }
+    }
+
+    // 🌟 SENIOR DOKUNUŞU: SAATLERİ RENDER ET (GEÇMİŞ ZAMAN + MEŞGULİYET KONTROLÜ) 🌟
+    function renderTimeSlots() {
+        const dateInput = document.querySelector('input[name="date"]:checked');
+        const staffInput = document.querySelector('input[name="staff"]:checked');
+        
+        if(!dateInput || !staffInput) return;
+
+        const selectedDate = dateInput.value;
+        const selectedStaffName = staffInput.getAttribute('data-name'); 
+        const timeContainer = document.getElementById('time-container');
+        timeContainer.innerHTML = '';
+
+        // 1. MEŞGULİYET LİSTESİ HAZIRLA
+        const allAppointments = JSON.parse(localStorage.getItem('appointments')) || [];
+        const busyIntervals = [];
+        allAppointments.filter(app => app.date === selectedDate && app.staff === selectedStaffName).forEach(app => {
+            const startMins = timeToMins(app.time);
+            const duration = parseInt(app.duration) || 30; 
+            busyIntervals.push({ start: startMins, end: startMins + duration });
+        });
+
+        // 2. SEÇİLEN HİZMET SÜRESİ
+        let currentSelectionDuration = 0;
+        document.querySelectorAll('input[name="service"]:checked').forEach(cb => {
+            currentSelectionDuration += parseInt(cb.getAttribute('data-duration'));
+        });
+
+        // 3. BUGÜNÜN ZAMANI (Geçmiş saatleri engellemek için)
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0]; // "YYYY-MM-DD"
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const isToday = (selectedDate === todayStr);
+
+        // 4. MESAİ SAATLERİ (10:00 - 22:00)
+        const startHour = 10;
+        const endHour = 22;
+        const shopClosingMins = endHour * 60; // 1320
+
+        for (let h = startHour; h < endHour; h++) {
+            ['00', '30'].forEach(m => {
+                const timeStr = `${h}:${m}`;
+                const slotStart = timeToMins(timeStr);
+                const slotEnd = slotStart + currentSelectionDuration; // İşin bitiş zamanı
+
+                let isBlocked = false;
+
+                // KONTROL A: GEÇMİŞ ZAMAN MI?
+                if (isToday && slotStart <= currentMinutes) {
+                    isBlocked = true;
+                }
+
+                // KONTROL B: KAPANIŞ SAATİNİ GEÇİYOR MU?
+                if (slotEnd > shopClosingMins) {
+                    isBlocked = true;
+                }
+
+                // KONTROL C: BAŞKA RANDEVUYLA ÇAKIŞIYOR MU?
+                if (!isBlocked) {
+                    for (let interval of busyIntervals) {
+                        // Slotun başlangıcı dolu aralıkta mı? VEYA İş bitmeden dolu aralığa giriyor mu?
+                        if ((slotStart >= interval.start && slotStart < interval.end) || 
+                            (slotStart < interval.start && slotEnd > interval.start)) {
+                            isBlocked = true;
+                            break;
+                        }
+                    }
+                }
+
+                const disabledAttr = isBlocked ? 'disabled' : '';
+                const style = isBlocked ? 'style="opacity:0.3; cursor:not-allowed; text-decoration:line-through; background:#eee; color:#ccc;"' : '';
+
+                const html = `
+                    <label>
+                        <input type="radio" name="time" value="${timeStr}" class="time-radio" ${disabledAttr}>
+                        <div class="time-pill" ${style}>${timeStr}</div>
+                    </label>
+                `;
+                timeContainer.innerHTML += html;
+            });
+        }
+    }
+
+    document.addEventListener('change', function(e) {
+        if(e.target.name === 'date') renderTimeSlots();
+    });
+
+    // VALİDASYON
+    function validateStep(step) {
+        if (step === 1) {
+            const selected = document.querySelector('input[name="staff"]:checked');
+            if (!selected) { alert("Lütfen bir uzman seçiniz."); return false; }
+        }
+        if (step === 2) {
+            const selected = document.querySelectorAll('input[name="service"]:checked');
+            if (selected.length === 0) { alert("Lütfen en az bir hizmet seçiniz."); return false; }
+        }
+        if (step === 3) {
+            const date = document.querySelector('input[name="date"]:checked');
+            const time = document.querySelector('input[name="time"]:checked');
+            if (!date || !time) { alert("Lütfen tarih ve saat seçiniz."); return false; }
+            document.getElementById('selectedDate').value = date.value;
+            document.getElementById('selectedTime').value = time.value;
+        }
+        return true;
+    }
+
+    // ÖZET
+    function updateSummary() {
+        const staffName = document.querySelector('input[name="staff"]:checked').getAttribute('data-name');
+        
+        const checkedServices = document.querySelectorAll('input[name="service"]:checked');
+        let serviceNames = [];
+        let totalDuration = 0;
+        let totalPrice = 0;
+
+        checkedServices.forEach(cb => {
+            const key = cb.value;
+            const info = ALL_SERVICES_INFO[key];
+            const price = parseInt(cb.getAttribute('data-price'));
+            
+            if(info) {
+                serviceNames.push(info.name);
+                totalDuration += info.duration;
+                totalPrice += price;
+            }
+        });
+
+        const date = document.getElementById('selectedDate').value;
+        const time = document.getElementById('selectedTime').value;
+
+        document.getElementById('sum-staff').textContent = staffName;
+        document.getElementById('sum-service').textContent = serviceNames.join(", ");
+        document.getElementById('sum-datetime').textContent = `${date} / ${time}`;
+        document.getElementById('sum-duration').textContent = `${totalDuration} Dakika`;
+        document.getElementById('sum-price').textContent = `${totalPrice} ₺`;
+    }
+
+    // SAYFA YÜKLENİNCE
+    document.addEventListener('DOMContentLoaded', () => {
+        // BERBERLER
+        const staffContainer = document.getElementById('staff-grid-container');
+        const teamData = JSON.parse(localStorage.getItem('teamData')) || [];
+        
+        staffContainer.innerHTML = '';
+        if (teamData.length === 0) {
+            staffContainer.innerHTML = '<p style="text-align:center; width:100%;">Henüz çalışan eklenmemiş. Lütfen Admin Panelinden ekleyiniz.</p>';
+        } else {
+            teamData.forEach(member => {
+                const imgUrl = member.img ? member.img : 'https://placehold.co/100x100/1C1C1C/c5a059?text=Usta';
+                const html = `
+                    <label>
+                        <input type="radio" name="staff" value="${member.id}" data-name="${member.name}" class="staff-radio">
+                        <div class="staff-card">
+                            <div class="staff-img-box"><img src="${imgUrl}" onerror="this.src='https://placehold.co/100x100/1C1C1C/c5a059?text=Usta'"></div>
+                            <span class="staff-name">${member.name}</span>
+                        </div>
+                    </label>
+                `;
+                staffContainer.innerHTML += html;
+            });
+        }
+
+        // TARİHLER (14 GÜN - PAZAR HARİÇ)
+        const dateContainer = document.getElementById('date-container');
+        const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
+        let daysAdded = 0; let i = 0;
+        while (daysAdded < 14) {
+            const d = new Date(); d.setDate(d.getDate() + i); i++;
+            // Pazar Günü Kontrolü (0 = Pazar)
+            if (d.getDay() === 0) continue; 
+            
+            // Yerel saate göre YYYY-MM-DD formatı veren güvenli fonksiyon
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+            const html = `
+                <label>
+                    <input type="radio" name="date" value="${dateStr}" class="date-radio">
+                    <div class="date-card"><span class="day">${days[d.getDay()]}</span><span class="num">${d.getDate()}</span></div>
+                </label>`;
+            dateContainer.innerHTML += html;
+            daysAdded++;
+        }
+    });
+
+    // FORM GÖNDERME
+    function submitForm() {
+        const fullname = document.getElementById('fullname').value;
+        const phone = document.getElementById('phone').value;
+        const note = document.getElementById('note').value;
+        const kvkk = document.getElementById('kvkk').checked;
+
+        if (!fullname || !phone) { alert("Lütfen ad, soyad ve telefon giriniz."); return; }
+        if (phone.length !== 10) { alert("Telefon numarası 10 haneli olmalıdır."); return; }
+        if (!kvkk) { alert("KVKK onayı gereklidir."); return; }
+
+        const checkedServices = document.querySelectorAll('input[name="service"]:checked');
+        const serviceNames = [];
+        let totalPrice = 0;
+        let totalDuration = 0;
+
+        checkedServices.forEach(cb => {
+            const info = ALL_SERVICES_INFO[cb.value];
+            const price = parseInt(cb.getAttribute('data-price'));
+            if(info) {
+                serviceNames.push(info.name);
+                totalPrice += price;
+                totalDuration += info.duration;
+            }
+        });
+
+        const appointmentData = {
+            id: Date.now(),
+            staff: document.querySelector('input[name="staff"]:checked').getAttribute('data-name'),
+            service: serviceNames.join(", "),
+            price: totalPrice,
+            duration: totalDuration,
+            date: document.getElementById('selectedDate').value,
+            time: document.getElementById('selectedTime').value,
+            customer: fullname,
+            phone: phone,
+            note: note,
+            status: 'Bekliyor'
+        };
+
+        const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+        appointments.push(appointmentData);
+        localStorage.setItem('appointments', JSON.stringify(appointments));
+
+        alert(`Randevunuz Alındı!\n\nToplam: ${totalPrice} ₺\nSüre: ${totalDuration} Dk`);
+        window.location.href = 'index2.html';
+    }
+</script>
+
+</body>
+</html>

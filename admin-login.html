@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yönetici Girişi | Eren Kozan</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root {
+    --bone-white: #F8F6F4; 
+    --charcoal: #1C1C1C; 
+    --oak: #946E4C; 
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--charcoal);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background-image: repeating-linear-gradient(45deg, rgba(148, 110, 76, 0.05) 0, rgba(148, 110, 76, 0.05) 1px, transparent 1px, transparent 20px);
+}
+
+.login-box {
+    background: rgba(28, 28, 28, 0.95);
+    padding: 50px;
+    border-radius: 12px;
+    border: 2px solid var(--oak);
+    box-shadow: 0 0 40px rgba(148, 110, 76, 0.15);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    position: relative;
+}
+
+.logo-text {
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--bone-white);
+    margin-bottom: 5px;
+    display: block;
+    text-shadow: 0 0 10px rgba(148, 110, 76, 0.5);
+}
+
+.subtitle {
+    color: var(--oak);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+    opacity: 0.8;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    color: #bbb;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    background: #252525;
+    border: 1px solid #333;
+    color: var(--bone-white);
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--oak);
+    box-shadow: 0 0 15px rgba(148, 110, 76, 0.15);
+    background: #2a2a2a;
+}
+
+/* Şifre Göster/Gizle İkonu */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 38px;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+.password-toggle:hover { color: var(--oak); }
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--oak);
+    color: var(--bone-white);
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+}
+
+.login-btn:hover {
+    background: #7a5a4d;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+}
+
+.error-msg {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 15px;
+    display: none;
+    background: rgba(255, 107, 107, 0.1);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* Siteye Dön Linki */
+.back-link {
+    display: block;
+    margin-top: 25px;
+    color: #666;
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.back-link:hover { color: var(--oak); }
+
+</style>
+</head>
+<body>
+
+<div class="login-box">
+    <span class="logo-text">EREN KOZAN</span>
+    <div class="subtitle">Yönetim Paneli</div>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Kullanıcı Adı</label>
+            <input type="text" id="username" placeholder="Admin" required autocomplete="off">
+        </div>
+        
+        <div class="form-group">
+            <label>Şifre</label>
+            <input type="password" id="password" placeholder="••••••" required>
+            <i class="fas fa-eye password-toggle" onclick="togglePassword()"></i>
+        </div>
+
+        <button type="submit" class="login-btn">Giriş Yap</button>
+        <p class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i> Hatalı kullanıcı adı veya şifre!</p>
+        
+        <a href="index2.html" class="back-link"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</a>
+    </form>
+</div>
+
+<script>
+    // Şifreyi basitçe gizlemek için (Base64) - Gerçek güvenlik backend ile olur
+    // "admin" -> "YWRtaW4="
+    // "1234" -> "MTIzNA=="
+    const VALID_USER_HASH = "YWRtaW4="; 
+    const VALID_PASS_HASH = "MTIzNA==";
+
+    const loginForm = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // Şifre Göster/Gizle
+    function togglePassword() {
+        const passInput = document.getElementById('password');
+        const icon = document.querySelector('.password-toggle');
+        if (passInput.type === "password") {
+            passInput.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passInput.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault(); 
+
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        // Girilen veriyi şifrele (Base64) ve kontrol et
+        // btoa() fonksiyonu string'i Base64'e çevirir.
+        if (btoa(user) === VALID_USER_HASH && btoa(pass) === VALID_PASS_HASH) {
+            
+            // Giriş Başarılı Efekti
+            const btn = document.querySelector('.login-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yönlendiriliyor...';
+            btn.style.opacity = '0.8';
+            
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            
+            setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+            }, 800); // 0.8 saniye bekle (Hava olsun)
+
+        } else {
+            // Hatalı giriş
+            errorMsg.style.display = 'block';
+            document.querySelector('.login-box').animate([
+                { transform: 'translateX(0)' },
+                { transform: 'translateX(-10px)' },
+                { transform: 'translateX(10px)' },
+                { transform: 'translateX(0)' }
+            ], { duration: 300 });
+        }
+    });
+    
+    // Eğer zaten giriş yapmışsa direkt panele at
+    if(localStorage.getItem('isAdminLoggedIn') === 'true') {
+        // window.location.href = 'admin-dashboard.html'; // Geliştirme aşamasında kapalı tutabilirsin
+    }
+</script>
+
+</body>
+</html>

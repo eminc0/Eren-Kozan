@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ustalarımız | Eren Kozan</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* --- 1. ORTAK PREMIUM STİLLER --- */
+:root {
+    --creme-bg: #f9f7f2; 
+    --gold-accent: #c5a059; 
+    --dark-text: #1a1a1a; 
+    --hero-bg: #111;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--creme-bg);
+    color: var(--dark-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- 2. NAV BAR (Şeffaf Başlar, Scroll ile Koyulaşır) --- */
+nav {
+    position: fixed; top: 0; width: 100%;
+    background: transparent; 
+    padding: 15px 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 999; transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Scroll edilince */
+nav.scrolled { background: #1a1a1a; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+
+/* Logo ve Linkler (Ana sayfadakiyle aynı) */
+nav .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: transform 0.3s ease; }
+nav .logo-container:hover { transform: scale(1.05); }
+.logo-img { height: 40px; width: auto; filter: drop-shadow(0 0 5px rgba(197, 160, 89, 0.8)); }
+.logo-text { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 0 6px rgba(197, 160, 89, 0.9); text-decoration: none; }
+
+nav .nav-links { margin-right: 50px; display: flex; align-items: center; gap: 20px; }
+nav .nav-links a {
+    font-family: 'Inter', sans-serif; font-weight: 700; color: #fff; padding: 6px 14px;
+    border-radius: 8px; text-decoration: none; text-transform: uppercase; position: relative; transition: color 0.3s ease; font-size: 14px;
+}
+nav .nav-links a::after {
+    content: ""; display: block; width: 0%; height: 2px; background: var(--gold-accent); 
+    position: absolute; bottom: 0; left: 0; transition: width 0.3s ease;
+}
+nav .nav-links a:hover::after { width: 100%; }
+nav .nav-links a:hover { color: var(--gold-accent); }
+nav .nav-links a.active { color: var(--gold-accent); } 
+
+@media (max-width: 900px) {
+    nav { flex-direction: column; padding: 15px; background: #1a1a1a; } 
+    nav .nav-links { justify-content: center; margin-top: 10px; margin-right: 0; flex-wrap: wrap; }
+}
+
+/* --- 3. PAGE HERO (ANIMASYONLU BAŞLIK) --- */
+#page-hero {
+    position: relative;
+    width: 100%;
+    height: 50vh; /* Ekranın yarısı kadar */
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--hero-bg);
+    overflow: hidden;
+}
+
+#hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+.page-hero-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, #000 120%);
+    z-index: 2; pointer-events: none;
+}
+
+.page-hero-content { position: relative; z-index: 3; padding: 20px; }
+
+.page-hero-content h1 {
+    font-family: 'Cinzel', serif; font-size: 56px; color: #fff; margin: 0;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.8); letter-spacing: 5px;
+    opacity: 0; animation: fadeInUp 1s ease-out 0.3s forwards;
+}
+
+.page-hero-content .divider {
+    width: 100px; height: 2px; background: var(--gold-accent); margin: 20px auto;
+    opacity: 0; animation: expandLine 1s ease-out 0.8s forwards;
+}
+
+.page-hero-content p {
+    font-family: 'Inter', sans-serif; font-size: 18px; color: #ddd; 
+    font-weight: 300; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0; animation: fadeInUp 1s ease-out 1s forwards;
+}
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes expandLine { from { width: 0; opacity: 0; } to { width: 100px; opacity: 1; } }
+
+
+/* --- 4. İÇERİK KAPSAYICISI (DESENLİ) --- */
+.content-wrapper {
+    background-color: var(--creme-bg);
+    /* Kesintisiz Dikey Çizgiler (Ana Sayfa ile aynı) */
+    background-image: repeating-linear-gradient(
+        90deg, 
+        transparent, 
+        transparent 79px, 
+        rgba(197, 160, 89, 0.05) 79px, 
+        rgba(197, 160, 89, 0.05) 80px
+    );
+    background-attachment: fixed;
+    padding: 80px 5% 100px 5%;
+}
+
+.team-grid {
+    display: flex; justify-content: center; gap: 50px; flex-wrap: wrap;
+    max-width: 1200px; margin: 0 auto;
+}
+
+/* --- KART TASARIMI --- */
+.team-card {
+    width: 340px;
+    background: #FFFFFF;
+    border: 1px solid var(--gold-accent); /* Altın Çerçeve */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s ease;
+    position: relative;
+    display: flex; flex-direction: column;
+    
+    /* Animasyon Başlangıcı */
+    opacity: 0; transform: translateY(50px);
+}
+
+.team-card.visible { opacity: 1; transform: translateY(0); }
+
+.team-card:hover {
+    transform: translateY(-15px); 
+    box-shadow: 0 25px 60px rgba(197, 160, 89, 0.15); 
+}
+
+.img-box {
+    width: 100%; height: 400px; overflow: hidden; position: relative;
+    border-bottom: 4px solid var(--gold-accent);
+}
+
+.team-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(20%); /* Hafif siyah beyaz */
+    transition: all 0.5s ease;
+}
+
+.team-card:hover img {
+    filter: grayscale(0%); /* Renklenir */
+    transform: scale(1.05); /* Yaklaşır */
+}
+
+.card-info { padding: 30px; text-align: center; flex-grow: 1; }
+
+.team-card h3 {
+    font-family: 'Cinzel', serif; font-size: 26px; margin: 0 0 5px 0; color: var(--dark-text);
+}
+
+.team-card h4 {
+    font-size: 13px; font-weight: 700; margin-bottom: 20px; color: var(--gold-accent); 
+    text-transform: uppercase; letter-spacing: 2px;
+}
+
+.skills span {
+    display: inline-block; background: var(--creme-bg); color: #555;
+    font-size: 11px; padding: 6px 14px; margin: 3px; border-radius: 20px;
+    font-weight: 600; border: 1px solid #e0e0e0; text-transform: uppercase;
+}
+
+.team-card p {
+    font-size: 14px; padding-top: 15px; color: #777; line-height: 1.6; font-style: italic;
+    border-top: 1px solid #eee; margin-top: 15px;
+}
+
+/* --- 5. FOOTER --- */
+footer {
+    background: #1a1a1a; color: #fff; padding: 60px 10% 20px 10%; 
+    border-top: 4px solid var(--gold-accent);
+}
+.footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; margin-bottom: 40px; }
+.footer-col { flex: 1; min-width: 200px; text-align: left; }
+.footer-col h4 { color: var(--gold-accent); font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 18px; }
+.footer-col p, .footer-col li { color: #ccc; font-size: 14px; line-height: 1.8; list-style: none; margin-bottom: 10px; }
+.footer-col ul { padding: 0; }
+.footer-col a { color: #ccc; text-decoration: none; transition: color 0.3s; }
+.footer-col a:hover { color: var(--gold-accent); }
+.social-links a { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; margin-right: 10px; color: #fff; transition: all 0.3s; }
+.social-links a:hover { background: var(--gold-accent); border-color: var(--gold-accent); }
+.footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 13px; color: #666; }
+.admin-access-link { color: #444; text-decoration: none; margin-top: 10px; display: inline-block; }
+.admin-access-link:hover { color: var(--gold-accent); }
+
+</style>
+</head>
+
+<body>
+
+<nav>
+    <a href="index.html" class="logo-container">
+        <span class="logo-text">EREN KOZAN</span>
+    </a>
+    <div class="nav-links">
+        <a href="employees.html" class="active">Çalışanlar</a>
+        <a href="products.html">Ürünler</a>
+        <a href="index.html#location">Konum</a>
+        <a href="appointment.html">Randevu</a>
+    </div>
+</nav>
+
+<header id="page-hero">
+    <canvas id="hero-canvas"></canvas> <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+        <h1>USTALARIMIZ</h1>
+        <div class="divider"></div>
+        <p>Geleneksel Zanaat, Modern Dokunuş</p>
+    </div>
+</header>
+
+<section class="content-wrapper">
+    <div class="team-grid" id="team-grid-container">
+        </div>
+</section>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-col">
+            <h4>EREN KOZAN</h4>
+            <p>Bursa'nın en prestijli erkek bakım merkezi. Geleneksel zanaatı modern dokunuşlarla sunuyoruz.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Hızlı Erişim</h4>
+            <ul>
+                <li><a href="index2.html">Ana Sayfa</a></li>
+                <li><a href="employees2.html">Ekibimiz</a></li>
+                <li><a href="products2.html">Ürünler</a></li>
+                <li><a href="appointment2.html">Randevu Al</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Çalışma Saatleri</h4>
+            <ul>
+                <li>Pazartesi - Cmt: 10:00 - 22:00</li>
+                <li>Pazar: Kapalı</li>
+            </ul>
+            <p style="margin-top:15px; color:var(--gold-accent);">Randevulu Hizmet</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2025 Eren Kozan — Tüm Hakları Saklıdır</p>
+        <div class="admin-link-container">
+            <a href="admin-login.html" class="admin-access-link"><i class="fas fa-lock"></i> Yönetici Girişi</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 1. NAVBAR SCROLL EFEKTİ
+    const nav = document.querySelector('nav');
+    function changeNavColor() {
+        if (window.scrollY >= 100) nav.classList.add('scrolled'); 
+        else nav.classList.remove('scrolled');
+    }
+    window.addEventListener('scroll', changeNavColor);
+    window.addEventListener('load', changeNavColor);
+
+    // 2. KARTLARI DOLDUR (JS)
+    const gridContainer = document.getElementById('team-grid-container');
+    let storedData = localStorage.getItem('teamData');
+    let teamData;
+
+    if (storedData) {
+        teamData = JSON.parse(storedData);
+    } else {
+        // Varsayılan veri (Yedek)
+        teamData = [
+            {
+                id: "eren",
+                name: "Eren Kozan",
+                role: "Kurucu & Master Barber",
+                img: "img/eren_team.jpeg",
+                skills: ["Classic Cut", "Sakal Uzmanı", "Cilt Bakımı"],
+                desc: "12 yıllık tecrübesiyle Eren Kozan, Bursa'nın en seçkin isimlerine hizmet vermektedir."
+            }
+        ];
+    }
+
+    if (teamData && teamData.length > 0) {
+        teamData.forEach((member, index) => { 
+            // index'i kullanarak gecikme (delay) ekliyoruz -> Sırayla gelmeleri için
+            
+            const skillsHTML = member.services ? member.services.map(skill => {
+                let skillName = skill;
+                if(skill === 'sac-kesim') skillName = 'Saç Kesim';
+                else if(skill === 'sakal-tras') skillName = 'Sakal Tıraş';
+                else if(skill === 'sac-sakal') skillName = 'Saç & Sakal';
+                else if(skill === 'cilt-bakim') skillName = 'Cilt Bakım';
+                else if(skill === 'cocuk') skillName = 'Çocuk';
+                else if(skill === 'fon') skillName = 'Fön';
+                return `<span>${skillName}</span>`;
+            }).join('') : '';
+
+            // Placeholder (Resim yoksa)
+            const placeholderImg = "https://placehold.co/300x350/1C1C1C/c5a059?text=Resim+Yok";
+
+            const cardHTML = `
+                <div class="team-card scroll-animate" style="transition-delay: ${index * 0.15}s">
+                    <div class="img-box">
+                        <img src="${member.img}" 
+                             alt="${member.name}" 
+                             onerror="this.onerror=null; this.src='${placeholderImg}';">
+                    </div>
+                    <div class="card-info">
+                        <h3>${member.name}</h3>
+                        <h4>${member.role}</h4>
+                        <div class="skills">
+                            ${skillsHTML}
+                        </div>
+                        <p>${member.desc}</p>
+                    </div>
+                </div>
+            `;
+            gridContainer.innerHTML += cardHTML;
+        });
+    } else {
+        gridContainer.innerHTML = "<p>Henüz ekip üyesi eklenmemiştir.</p>";
+    }
+
+    // 3. SCROLL ANIMASYONU (OBSERVER)
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    // Dinamik eklenen kartları gözlemle
+    setTimeout(() => {
+        document.querySelectorAll('.scroll-animate').forEach((el) => {
+            observer.observe(el);
+        });
+    }, 100);
+
+
+    // 4. HEADER CANVAS ANIMASYONU (PARÇACIKLAR)
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const particleCount = 30; // Daha az yoğunluk
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = document.getElementById('page-hero').offsetHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5; 
+            this.vy = (Math.random() - 0.5) * 0.5; 
+            this.size = Math.random() * 3 + 1; 
+            this.opacity = Math.random() * 0.5 + 0.1; 
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
+            if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+        }
+        draw() {
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(197, 160, 89, ${this.opacity})`; ctx.fill();
+        }
+    }
+
+    function init() {
+        resize();
+        for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); }
+        animate();
+    }
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+    }
+    window.addEventListener('resize', resize);
+    init();
+
+</script>
+
+</body>
+</html>

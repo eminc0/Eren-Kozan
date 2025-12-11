@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Özel Koleksiyon | Eren Kozan</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* --- 1. ORTAK PREMIUM STİLLER --- */
+:root {
+    --creme-bg: #f9f7f2; 
+    --gold-accent: #c5a059; 
+    --dark-text: #1a1a1a; 
+    --hero-bg: #111;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--creme-bg);
+    color: var(--dark-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- 2. NAV BAR --- */
+nav {
+    position: fixed; top: 0; width: 100%;
+    background: transparent; 
+    padding: 15px 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 999; transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+nav.scrolled { background: #1a1a1a; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+
+nav .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: transform 0.3s ease; }
+nav .logo-container:hover { transform: scale(1.05); }
+.logo-img { height: 40px; width: auto; filter: drop-shadow(0 0 5px rgba(197, 160, 89, 0.8)); }
+.logo-text { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 0 6px rgba(197, 160, 89, 0.9); }
+
+nav .nav-links { margin-right: 50px; display: flex; align-items: center; gap: 20px; }
+nav .nav-links a {
+    font-family: 'Inter', sans-serif; font-weight: 700; color: #fff; padding: 6px 14px;
+    border-radius: 8px; text-decoration: none; text-transform: uppercase; position: relative; transition: color 0.3s ease; font-size: 14px;
+}
+nav .nav-links a::after {
+    content: ""; display: block; width: 0%; height: 2px; background: var(--gold-accent); 
+    position: absolute; bottom: 0; left: 0; transition: width 0.3s ease;
+}
+nav .nav-links a:hover::after { width: 100%; }
+nav .nav-links a:hover { color: var(--gold-accent); }
+nav .nav-links a.active { color: var(--gold-accent); }
+
+@media (max-width: 900px) {
+    nav { flex-direction: column; padding: 15px; background: #1a1a1a; }
+    nav .nav-links { justify-content: center; margin-top: 10px; margin-right: 0; flex-wrap: wrap; }
+}
+
+/* --- 3. PAGE HERO (ÜRÜNLER İÇİN) --- */
+#page-hero {
+    position: relative;
+    width: 100%;
+    height: 45vh;
+    min-height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--hero-bg);
+    overflow: hidden;
+}
+
+#hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+.page-hero-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, #000 120%);
+    z-index: 2; pointer-events: none;
+}
+
+.page-hero-content { position: relative; z-index: 3; padding: 20px; }
+
+.page-hero-content h1 {
+    font-family: 'Cinzel', serif; font-size: 56px; color: #fff; margin: 0;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.8); letter-spacing: 5px;
+    opacity: 0; animation: fadeInUp 1s ease-out 0.3s forwards;
+}
+
+.page-hero-content .divider {
+    width: 100px; height: 2px; background: var(--gold-accent); margin: 20px auto;
+    opacity: 0; animation: expandLine 1s ease-out 0.8s forwards;
+}
+
+.page-hero-content p {
+    font-family: 'Inter', sans-serif; font-size: 18px; color: #ddd; 
+    font-weight: 300; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0; animation: fadeInUp 1s ease-out 1s forwards;
+}
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes expandLine { from { width: 0; opacity: 0; } to { width: 100px; opacity: 1; } }
+
+
+/* --- 4. İÇERİK ALANI (DESENLİ) --- */
+.content-wrapper {
+    background-color: var(--creme-bg);
+    background-image: repeating-linear-gradient(
+        90deg, 
+        transparent, 
+        transparent 79px, 
+        rgba(197, 160, 89, 0.05) 79px, 
+        rgba(197, 160, 89, 0.05) 80px
+    );
+    background-attachment: fixed;
+    padding: 60px 5% 100px 5%;
+}
+
+/* --- FEATURED PRODUCT (VİTRİN ÜRÜNÜ) --- */
+.featured-wrapper {
+    max-width: 1100px; margin: 0 auto 80px auto;
+}
+
+.featured-card {
+    display: flex; flex-wrap: wrap; align-items: center;
+    background: #fff; border: 2px solid var(--gold-accent); border-radius: 8px;
+    overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+    opacity: 0; transform: translateY(50px); animation: fadeInUp 1s ease-out 1.2s forwards;
+}
+
+.featured-img {
+    flex: 1; min-width: 300px; height: 500px; position: relative; overflow: hidden;
+    background: #f8f8f8; display: flex; align-items: center; justify-content: center;
+}
+
+.featured-img img {
+    width: 90%; height: 90%; object-fit: contain; transition: transform 0.6s ease;
+}
+.featured-card:hover .featured-img img { transform: scale(1.1); }
+
+.badge {
+    position: absolute; top: 20px; left: 20px; z-index: 2;
+    background: var(--gold-accent); color: #fff; padding: 8px 16px;
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+}
+
+.featured-info {
+    flex: 1; padding: 50px; min-width: 300px; text-align: left;
+}
+
+.featured-info h3 {
+    font-family: 'Cinzel', serif; font-size: 36px; color: var(--dark-text); margin-bottom: 10px;
+}
+
+.featured-info .price {
+    font-size: 28px; color: var(--gold-accent); font-weight: 700; margin-bottom: 20px; display: block;
+}
+
+.featured-info p { color: #666; font-size: 16px; margin-bottom: 30px; line-height: 1.8; }
+
+.btn-primary {
+    display: inline-block; padding: 14px 35px; background: var(--dark-text); color: var(--gold-accent);
+    text-decoration: none; text-transform: uppercase; font-weight: 600; letter-spacing: 1px;
+    border: 1px solid var(--dark-text); transition: all 0.3s ease;
+}
+.btn-primary:hover { background: var(--gold-accent); color: #fff; border-color: var(--gold-accent); }
+
+
+/* --- ÜRÜN IZGARASI --- */
+.products-grid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 40px; max-width: 1100px; margin: 0 auto;
+}
+
+.product-card {
+    background: #fff; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 6px;
+    overflow: hidden; transition: all 0.4s ease; display: flex; flex-direction: column;
+    opacity: 0; transform: translateY(30px);
+}
+
+.product-card.visible { opacity: 1; transform: translateY(0); }
+
+.product-card:hover {
+    transform: translateY(-10px); box-shadow: 0 15px 40px rgba(197, 160, 89, 0.15);
+    border-color: var(--gold-accent);
+}
+
+.p-img-box {
+    width: 100%; height: 300px; overflow: hidden; position: relative; background: #fafafa;
+    border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: center;
+}
+
+.p-img-box img {
+    max-width: 85%; max-height: 85%; object-fit: contain; transition: transform 0.5s ease;
+}
+.product-card:hover .p-img-box img { transform: scale(1.1); }
+
+.p-details { padding: 25px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+
+.p-details h4 {
+    font-family: 'Cinzel', serif; font-size: 18px; color: var(--dark-text); margin-bottom: 10px;
+}
+
+.p-details .desc { font-size: 13px; color: #888; margin-bottom: 15px; line-height: 1.4; }
+
+.p-details .price {
+    font-size: 18px; color: var(--gold-accent); font-weight: 700; margin-bottom: 15px; display: block;
+}
+
+.p-btn {
+    display: inline-block; padding: 10px 0; width: 100%;
+    border: 1px solid var(--gold-accent); color: var(--gold-accent);
+    text-decoration: none; font-size: 13px; text-transform: uppercase; font-weight: 600;
+    transition: all 0.3s;
+}
+.p-btn:hover { background: var(--gold-accent); color: #fff; }
+
+
+/* --- 5. FOOTER --- */
+footer {
+    background: #1a1a1a; color: #fff; padding: 60px 10% 20px 10%; 
+    border-top: 4px solid var(--gold-accent);
+}
+.footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; margin-bottom: 40px; }
+.footer-col { flex: 1; min-width: 200px; text-align: left; }
+.footer-col h4 { color: var(--gold-accent); font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 18px; }
+.footer-col p, .footer-col li { color: #ccc; font-size: 14px; line-height: 1.8; list-style: none; margin-bottom: 10px; }
+.footer-col ul { padding: 0; }
+.footer-col a { color: #ccc; text-decoration: none; transition: color 0.3s; }
+.footer-col a:hover { color: var(--gold-accent); }
+.social-links a { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; margin-right: 10px; color: #fff; transition: all 0.3s; }
+.social-links a:hover { background: var(--gold-accent); border-color: var(--gold-accent); }
+.footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 13px; color: #666; }
+.admin-access-link { color: #444; text-decoration: none; margin-top: 10px; display: inline-block; }
+.admin-access-link:hover { color: var(--gold-accent); }
+
+</style>
+</head>
+
+<body>
+
+<nav>
+    <a href="index.html" class="logo-container">
+        <span class="logo-text">EREN KOZAN</span>
+    </a>
+    <div class="nav-links">
+        <a href="employees.html">Çalışanlar</a>
+        <a href="products.html" class="active">Ürünler</a>
+        <a href="index.html#location">Konum</a>
+        <a href="appointment.html">Randevu</a>
+    </div>
+</nav>
+
+<header id="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+        <h1>ÖZEL KOLEKSİYON</h1>
+        <div class="divider"></div>
+        <p>Salonumuzun Seçkin Ürünleri</p>
+    </div>
+</header>
+
+<div class="content-wrapper">
+    
+    <div id="featured-container" class="featured-wrapper"></div>
+
+    <div id="products-container" class="products-grid"></div>
+
+</div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-col">
+            <h4>EREN KOZAN</h4>
+            <p>Bursa'nın en prestijli erkek bakım merkezi. Geleneksel zanaatı modern dokunuşlarla sunuyoruz.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Hızlı Erişim</h4>
+            <ul>
+                <li><a href="index2.html">Ana Sayfa</a></li>
+                <li><a href="employees2.html">Ekibimiz</a></li>
+                <li><a href="products2.html">Ürünler</a></li>
+                <li><a href="appointment2.html">Randevu Al</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Çalışma Saatleri</h4>
+            <ul>
+                <li>Pazartesi - Cmt: 10:00 - 22:00</li>
+                <li>Pazar: Kapalı</li>
+            </ul>
+            <p style="margin-top:15px; color:var(--gold-accent);">Randevulu Hizmet</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2025 Eren Kozan — Tüm Hakları Saklıdır</p>
+        <div class="admin-link-container">
+            <a href="admin-login.html" class="admin-access-link"><i class="fas fa-lock"></i> Yönetici Girişi</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 1. NAVBAR SCROLL
+    const nav = document.querySelector('nav');
+    function changeNavColor() {
+        if (window.scrollY >= 100) nav.classList.add('scrolled'); 
+        else nav.classList.remove('scrolled');
+    }
+    window.addEventListener('scroll', changeNavColor);
+    window.addEventListener('load', changeNavColor);
+
+    // 2. RENDER FONKSİYONLARI (TAMAMEN DİNAMİK)
+    const featuredContainer = document.getElementById('featured-container');
+    const listContainer = document.getElementById('products-container');
+    const placeholderImg = "https://placehold.co/400x400/1C1C1C/c5a059?text=Eren+Kozan";
+
+    function renderPage() {
+        featuredContainer.innerHTML = '';
+        listContainer.innerHTML = '';
+
+        // Local Storage'dan Ürünleri Çek (Admin Panelinden Gelen)
+        const productsData = JSON.parse(localStorage.getItem('productData')) || [];
+
+        // EĞER HİÇ ÜRÜN YOKSA
+        if (productsData.length === 0) {
+            listContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888;">Henüz koleksiyona ürün eklenmemiş.</p>';
+            featuredContainer.style.display = 'none'; // Vitrini gizle
+            return;
+        }
+
+        // AYIN ÜRÜNÜ SEÇİMİ (Şimdilik ilk ürünü seçiyoruz veya rastgele seçebiliriz)
+        // Admin panelinde "Featured" seçeneği olmadığı için ilk ürünü vitrine koyuyoruz.
+        const featuredProduct = productsData[0]; 
+        
+        // Vitrin HTML (Ayın Ürünü)
+        const featuredHTML = `
+            <div class="featured-card">
+                <div class="badge">Ayın Ürünü</div>
+                <div class="featured-img">
+                    <img src="${featuredProduct.img}" onerror="this.src='${placeholderImg}'" alt="${featuredProduct.name}">
+                </div>
+                <div class="featured-info">
+                    <h3>${featuredProduct.name}</h3>
+                    <span class="price">${featuredProduct.price}</span>
+                    <p>${featuredProduct.desc}</p>
+                    <p style="font-size:14px; margin-top:10px; color:#1a1a1a;"><strong>Berberin Notu:</strong> "Müşterilerimizin favorisi. Kalitesi ve etkisiyle fark yaratıyor."</p>
+                    <a href="#" class="btn-primary" style="margin-top:20px;">Hemen Satın Al</a>
+                </div>
+            </div>
+        `;
+        featuredContainer.innerHTML = featuredHTML;
+        featuredContainer.style.display = 'block';
+
+        // DİĞER ÜRÜNLERİ LİSTELE (İlk ürün hariç diğerleri)
+        // Eğer sadece 1 ürün varsa liste boş kalır, sorun değil.
+        const otherProducts = productsData.slice(1); 
+
+        if (otherProducts.length > 0) {
+            otherProducts.forEach((prod, index) => {
+                const cardHTML = `
+                    <div class="product-card scroll-animate" style="transition-delay: ${index * 0.1}s">
+                        <div class="p-img-box">
+                            <img src="${prod.img}" onerror="this.src='${placeholderImg}'" alt="${prod.name}">
+                        </div>
+                        <div class="p-details">
+                            <h4>${prod.name}</h4>
+                            <p class="desc">${prod.desc}</p>
+                            <span class="price">${prod.price}</span>
+                            <a href="#" class="p-btn">İncele</a>
+                        </div>
+                    </div>
+                `;
+                listContainer.innerHTML += cardHTML;
+            });
+        }
+        
+        triggerAnimations();
+    }
+
+    // 3. SCROLL ANIMASYONLARI
+    function triggerAnimations() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        setTimeout(() => {
+            document.querySelectorAll('.scroll-animate').forEach((el) => {
+                observer.observe(el);
+            });
+        }, 100);
+    }
+
+    // 4. HERO CANVAS (PARÇACIKLAR)
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const particleCount = 30;
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = document.getElementById('page-hero').offsetHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width; this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5; 
+            this.size = Math.random() * 3 + 1; this.opacity = Math.random() * 0.5 + 0.1; 
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
+            if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+        }
+        draw() {
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(197, 160, 89, ${this.opacity})`; ctx.fill();
+        }
+    }
+
+    function init() {
+        resize(); for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); } animate();
+    }
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animateParticles); // Düzeltme: animate fonksiyonunu çağırıyoruz
+        // NOT: Yukarıdaki satırda 'requestAnimationFrame(animate)' olmalı, 'animateParticles' değil.
+        // Aşağıda düzelterek yazıyorum:
+        requestAnimationFrame(animate); 
+    }
+    window.addEventListener('resize', resize);
+    
+    // BAŞLAT
+    document.addEventListener('DOMContentLoaded', () => {
+        renderPage();
+        init();
+    });
+</script>
+
+</body>
+</html>

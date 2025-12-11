@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yönetim Paneli | Eren Kozan</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* --- 1. CORE STYLES (PREMIUM DARK THEME) --- */
+:root {
+    --bg-dark: #121212;
+    --bg-panel: #1e1e1e;
+    --text-main: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --gold: #c5a059;
+    --gold-hover: #b08d4e;
+    --danger: #e74c3c;
+    --success: #27ae60;
+    --info: #3498db;
+    --border: #333;
+}
+
+* { box-sizing: border-box; outline: none; }
+
+body {
+    margin: 0; font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark); color: var(--text-main);
+    display: flex; height: 100vh; overflow: hidden;
+}
+
+/* --- 2. SIDEBAR --- */
+.sidebar {
+    width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.brand {
+    font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: var(--gold);
+    text-align: center; padding-bottom: 20px; margin-bottom: 20px;
+    border-bottom: 1px solid var(--border); letter-spacing: 1px;
+}
+
+.menu { flex: 1; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+
+.menu-item {
+    padding: 12px 15px; color: var(--text-muted); text-decoration: none;
+    border-radius: 8px; font-size: 14px; font-weight: 500;
+    display: flex; align-items: center; gap: 12px; transition: all 0.2s;
+    cursor: pointer; border: 1px solid transparent;
+}
+
+.menu-item:hover, .menu-item.active {
+    background: rgba(197, 160, 89, 0.1); color: var(--gold);
+    border-color: rgba(197, 160, 89, 0.2);
+}
+
+.menu-item i { width: 20px; text-align: center; }
+
+.sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+
+.btn-logout {
+    background: transparent; border: 1px solid var(--danger); color: var(--danger);
+    padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.3s;
+}
+.btn-logout:hover { background: var(--danger); color: #fff; }
+
+.btn-reset {
+    background: transparent; border: 1px solid #f39c12; color: #f39c12;
+    padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.3s;
+}
+.btn-reset:hover { background: #f39c12; color: #000; }
+
+/* --- 3. MAIN CONTENT --- */
+.main-content {
+    flex: 1; padding: 30px; overflow-y: auto; position: relative;
+}
+
+.section { display: none; animation: fadeIn 0.4s ease; }
+.section.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.page-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px;
+}
+.page-title { font-family: 'Cinzel', serif; font-size: 28px; color: var(--gold); margin: 0; }
+
+/* --- DASHBOARD STATS --- */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
+.stat-card {
+    background: var(--bg-panel); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.stat-icon {
+    width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #fff;
+}
+.icon-blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+.icon-gold { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+.icon-green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.icon-red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+.stat-info h4 { margin: 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.stat-info p { margin: 5px 0 0 0; font-size: 24px; font-weight: 700; color: var(--text-main); }
+
+/* --- TABLES & LISTS --- */
+.card-panel {
+    background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border);
+    overflow: hidden; margin-bottom: 30px;
+}
+.panel-header {
+    padding: 20px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.panel-title { margin: 0; font-size: 18px; font-weight: 600; color: var(--gold); }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 15px 20px; color: var(--text-muted); font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--border); }
+td { padding: 15px 20px; border-bottom: 1px solid var(--border); color: var(--text-main); font-size: 14px; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+.user-cell { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+
+/* BUTTONS & ACTIONS */
+.btn { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+.btn-primary { background: var(--gold); color: #000; }
+.btn-primary:hover { background: var(--gold-hover); }
+.btn-sm { padding: 6px 10px; font-size: 12px; }
+
+.action-group { display: flex; gap: 5px; }
+.btn-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: none; cursor: pointer; color: #fff; transition: 0.2s; }
+.btn-view { background: var(--info); }
+.btn-check { background: var(--success); }
+.btn-trash { background: var(--danger); }
+.btn-icon:hover { opacity: 0.8; transform: translateY(-2px); }
+
+/* FORMS */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); }
+.form-input {
+    width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid var(--border);
+    color: #fff; border-radius: 6px; transition: border-color 0.3s;
+}
+.form-input:focus { border-color: var(--gold); }
+
+/* SERVICE CHECKBOXES */
+.service-selector {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    background: #2a2a2a; padding: 15px; border-radius: 6px; border: 1px solid var(--border);
+}
+.cb-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #ddd; cursor: pointer; }
+.cb-item input { accent-color: var(--gold); transform: scale(1.2); }
+
+/* MODAL */
+.modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
+    backdrop-filter: blur(5px);
+}
+.modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+.modal-box {
+    background: var(--bg-panel); width: 90%; max-width: 600px; border-radius: 12px;
+    border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.modal-header {
+    background: var(--bg-dark); padding: 15px 25px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.modal-header h3 { margin: 0; color: var(--gold); font-family: 'Cinzel', serif; }
+.btn-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+.btn-close:hover { color: #fff; }
+.modal-body { padding: 25px; max-height: 70vh; overflow-y: auto; }
+
+.detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.detail-label { color: var(--text-muted); font-weight: 600; }
+.detail-val { color: #fff; text-align: right; }
+.note-highlight { background: rgba(52, 152, 219, 0.1); border-left: 4px solid var(--info); padding: 15px; margin-top: 15px; color: #ddd; font-style: italic; }
+
+/* --- MOBİL İYİLEŞTİRMELERİ --- */
+@media (max-width: 768px) {
+    /* 1. Sidebar'ı mobilde tamamen gizle veya alta al (Basit çözüm: İkon bar yap) */
+    .sidebar { 
+        width: 60px; 
+        padding: 10px 5px; 
+    }
+    .sidebar .brand, .sidebar .menu-text { 
+        display: none; /* Yazıları gizle, sadece ikon kalsın */
+    }
+    .main-content { 
+        margin-left: 60px; /* İçeriği sola çek */
+        width: calc(100% - 60px);
+        padding: 15px; /* Boşlukları azalt */
+    }
+
+    /* 2. Tabloların taşmasını engelle (Kaydırma çubuğu çıkar) */
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Mobilde akıcı kaydırma */
+    }
+    
+    /* 3. Modal (Popup) boyutlarını ayarla */
+    .modal-box {
+        width: 95%;
+        max-height: 85vh; /* Ekran boyunu taşmasın */
+    }
+    
+    /* 4. Yazı boyutlarını tıkla okunur yap */
+    th, td {
+        font-size: 12px;
+        padding: 10px;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="brand">YÖNETİM PANELİ</div>
+    <div class="menu">
+        <div class="menu-item active" onclick="showSection('dashboard')"><i class="fas fa-th-large"></i> Genel Bakış</div>
+        <div class="menu-item" onclick="showSection('appointments')"><i class="fas fa-calendar-check"></i> Randevular</div>
+        <div class="menu-item" onclick="showSection('reports')"><i class="fas fa-chart-line"></i> Finansal Rapor</div>
+        <div class="menu-item" onclick="showSection('employees')"><i class="fas fa-user-tie"></i> Çalışanlar</div>
+        <div class="menu-item" onclick="showSection('products')"><i class="fas fa-box-open"></i> Ürünler</div>
+        <div class="menu-item" onclick="showSection('reviews')"><i class="fas fa-star"></i> Yorumlar</div>
+    </div>
+    <div class="sidebar-footer">
+        <button onclick="resetSystem()" class="btn-reset"><i class="fas fa-trash-alt"></i> Sistemi Sıfırla</button>
+        
+        <a href="index.html" target="_blank" class="menu-item"><i class="fas fa-external-link-alt"></i> Siteye Git</a>
+        <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
+    </div>
+</nav>
+
+<main class="main-content">
+
+    <section id="dashboard" class="section active">
+        <div class="page-header">
+            <h1 class="page-title">Genel Bakış</h1>
+            <span style="color:#666;" id="currentDateDisplay"></span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon icon-blue"><i class="fas fa-clock"></i></div>
+                <div class="stat-info"><h4>Bekleyen Randevu</h4><p id="stat-appt">0</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-green"><i class="fas fa-users"></i></div>
+                <div class="stat-info"><h4>Aktif Personel</h4><p id="stat-emp">0</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-red"><i class="fas fa-box"></i></div>
+                <div class="stat-info"><h4>Ürün Sayısı</h4><p id="stat-prod">0</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-gold"><i class="fas fa-coins"></i></div>
+                <div class="stat-info"><h4>Bu Ay Ciro</h4><p id="stat-revenue">0 ₺</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="appointments" class="section">
+        <div class="page-header"><h1 class="page-title">Randevu Takibi</h1></div>
+        
+        <div class="card-panel">
+            <div class="panel-header">
+                <h3 class="panel-title">Aktif Randevular</h3>
+                <button class="btn btn-primary btn-sm" onclick="renderAppointments()"><i class="fas fa-sync"></i> Yenile</button>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tarih & Saat</th>
+                            <th>Müşteri</th>
+                            <th>Hizmet & Personel</th>
+                            <th>Tutar</th>
+                            <th style="text-align:right;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appt-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="reports" class="section">
+        <div class="page-header">
+            <h1 class="page-title">Finansal Raporlar</h1>
+            <input type="month" id="reportMonth" class="form-input" style="width:auto;" onchange="renderReports()">
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card" style="border-color:var(--gold);">
+                <div class="stat-icon icon-gold"><i class="fas fa-wallet"></i></div>
+                <div class="stat-info">
+                    <h4>Seçilen Ay Ciro</h4>
+                    <p id="monthly-total-display">0 ₺</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-header"><h3 class="panel-title">Personel Performansı</h3></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Personel</th>
+                        <th>Tamamlanan İşlem</th>
+                        <th>Toplam Kazanç</th>
+                    </tr>
+                </thead>
+                <tbody id="report-table-body"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="employees" class="section">
+        <div class="page-header"><h1 class="page-title">Çalışan Yönetimi</h1></div>
+
+        <div class="card-panel">
+            <div class="panel-header"><h3 class="panel-title">Yeni Çalışan Ekle</h3></div>
+            <form id="employeeForm" class="form-grid">
+                <div class="form-group">
+                    <label>Ad Soyad</label>
+                    <input type="text" id="empName" class="form-input" required placeholder="Örn: Ahmet Usta">
+                </div>
+                <div class="form-group">
+                    <label>Ünvan</label>
+                    <input type="text" id="empRole" class="form-input" required placeholder="Örn: Master Barber">
+                </div>
+                <div class="form-group">
+                    <label>Fotoğraf URL</label>
+                    <input type="text" id="empImg" class="form-input" value="img/eren_team.jpeg">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>Verdiği Hizmetler (Fiyatlar Sabittir)</label>
+                    <div class="service-selector">
+                        <label class="cb-item"><input type="checkbox" name="services" value="sac-kesim" checked> Saç Kesimi (800₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="sakal-tras"> Sakal Tıraşı (400₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="sac-sakal"> Saç & Sakal (1000₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="cocuk"> Çocuk Tıraşı (500₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="fon"> Fön (200₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="sac-duzlestirme"> Saç Düzleştirme (1500₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="sac-botoksu"> Saç Botoksu (400₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="agda"> Ağda (150₺)</label>
+                        <label class="cb-item"><input type="checkbox" name="services" value="kas-tasarimi"> Kaş Tasarımı (300₺)</label>
+                    </div>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>Açıklama</label>
+                    <textarea id="empDesc" class="form-input" rows="2"></textarea>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Personeli Kaydet</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-header"><h3 class="panel-title">Kadro</h3></div>
+            <table>
+                <thead><tr><th>Personel</th><th>Ünvan</th><th>Hizmet Sayısı</th><th>İşlem</th></tr></thead>
+                <tbody id="emp-table-body"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="products" class="section">
+        <div class="page-header"><h1 class="page-title">Ürün Yönetimi</h1></div>
+        
+        <div class="card-panel">
+            <div class="panel-header"><h3 class="panel-title">Yeni Ürün Ekle</h3></div>
+            <form id="productForm" class="form-grid">
+                <div class="form-group"><label>Ürün Adı</label><input type="text" id="prodName" class="form-input" required></div>
+                <div class="form-group"><label>Fiyat (TL)</label><input type="number" id="prodPrice" class="form-input" required></div>
+                <div class="form-group"><label>Resim URL</label><input type="text" id="prodImg" class="form-input" value="img/product_shampoo.png"></div>
+                <div class="form-group" style="grid-column: 1 / -1;"><label>Açıklama</label><textarea id="prodDesc" class="form-input" rows="2"></textarea></div>
+                <div style="grid-column: 1 / -1;"><button type="submit" class="btn btn-primary" style="width:100%;">Ürünü Ekle</button></div>
+            </form>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-header"><h3 class="panel-title">Ürün Listesi</h3></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vitrin</th> <th>Ürün</th>
+                        <th>Fiyat</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="prod-table-body"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="reviews" class="section">
+        <div class="page-header"><h1 class="page-title">Yorum Yönetimi</h1></div>
+        
+        <div class="card-panel">
+            <div class="panel-header"><h3 class="panel-title">Yorum Ekle</h3></div>
+            <form id="reviewForm" class="form-grid">
+                <div class="form-group"><label>Ad Soyad</label><input type="text" id="revName" class="form-input" required></div>
+                <div class="form-group"><label>Ünvan (Örn: VIP)</label><input type="text" id="revTitle" class="form-input" required></div>
+                <div class="form-group"><label>Puan</label><select id="revRating" class="form-input"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option></select></div>
+                <div class="form-group" style="grid-column: 1 / -1;"><label>Yorum</label><textarea id="revComment" class="form-input" rows="2" required></textarea></div>
+                <div style="grid-column: 1 / -1;"><button type="submit" class="btn btn-primary" style="width:100%;">Yorumu Yayınla</button></div>
+            </form>
+        </div>
+
+        <div class="card-panel">
+            <table><thead><tr><th>Müşteri</th><th>Puan</th><th>Yorum</th><th>İşlem</th></tr></thead><tbody id="review-table-body"></tbody></table>
+        </div>
+    </section>
+
+</main>
+
+<div id="modalAppt" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header"><h3>Randevu Detayı</h3><button class="btn-close" onclick="closeModal('modalAppt')">&times;</button></div>
+        <div class="modal-body" id="apptModalContent"></div>
+    </div>
+</div>
+
+<div id="modalEmp" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header"><h3>Personel Profili</h3><button class="btn-close" onclick="closeModal('modalEmp')">&times;</button></div>
+        <div class="modal-body" id="empModalContent"></div>
+    </div>
+</div>
+
+
+<script>
+    // --- SABİT HİZMET FİYATLARI (TEK KAYNAK) ---
+    const SERVICE_CATALOG = {
+        'sac-kesim': 800,
+        'sakal-tras': 400,
+        'sac-sakal': 1000,
+        'cocuk': 500,
+        'fon': 200,
+        'sac-duzlestirme': 1500,
+        'sac-botoksu': 400,
+        'agda': 150,
+        'kas-tasarimi': 300,
+        'cilt-bakim': 400 // Varsayılan eklendi
+    };
+
+    const SERVICE_NAMES = {
+        'sac-kesim': 'Saç Kesimi', 'sakal-tras': 'Sakal Tıraşı', 'sac-sakal': 'Saç & Sakal', 
+        'cocuk': 'Çocuk Tıraşı', 'fon': 'Fön', 'sac-duzlestirme': 'Saç Düzleştirme',
+        'sac-botoksu': 'Saç Botoksu', 'agda': 'Ağda', 'kas-tasarimi': 'Kaş Tasarımı', 'cilt-bakim': 'Cilt Bakımı'
+    };
+
+    // --- TEMEL ---
+    if (!localStorage.getItem('isAdminLoggedIn')) window.location.href = 'admin-login.html';
+    
+    function getData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
+    function saveData(key, data) { localStorage.setItem(key, JSON.stringify(data)); updateDashboard(); }
+    
+    // --- BAŞLANGIÇ ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Tarihi Göster
+        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+        document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('tr-TR', options);
+        
+        // Ay Seçiciyi Bugüne Ayarla
+        // Ay Seçiciyi Bugüne Ayarla (Yerel Saat ile)
+        const now = new Date();
+        const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        document.getElementById('reportMonth').value = currentMonthStr;
+
+        // İlk Yüklemeler
+        updateDashboard();
+        renderAppointments();
+        renderReports();
+        renderEmployees();
+        renderProducts();
+        renderReviews();
+    });
+
+    // --- MENÜ GEÇİŞİ ---
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        // Verileri Tazele
+        if(id === 'dashboard') updateDashboard();
+        if(id === 'appointments') renderAppointments();
+        if(id === 'reports') renderReports();
+        if(id === 'employees') renderEmployees();
+        if(id === 'products') renderProducts();
+        if(id === 'reviews') renderReviews();
+    }
+
+    // --- 1. DASHBOARD ---
+    function updateDashboard() {
+        const appts = getData('appointments');
+        const team = getData('teamData');
+        const prods = getData('productData');
+        const accounting = getData('accountingRecords');
+
+        // Bu ayın cirosu
+        const currentMonth = new Date().toISOString().slice(0, 7); // "2025-12"
+        const monthlyRevenue = accounting
+            .filter(rec => rec.completedAt && rec.completedAt.startsWith(currentMonth))
+            .reduce((sum, rec) => sum + (rec.price || 0), 0);
+
+        document.getElementById('stat-appt').innerText = appts.length;
+        document.getElementById('stat-emp').innerText = team.length;
+        document.getElementById('stat-prod').innerText = prods.length;
+        document.getElementById('stat-revenue').innerText = formatMoney(monthlyRevenue);
+    }
+
+    // --- 2. RANDEVULAR ---
+    function renderAppointments() {
+        const list = getData('appointments');
+        const tbody = document.getElementById('appt-table-body');
+        tbody.innerHTML = '';
+
+        if(list.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#666; padding:20px;">Bekleyen randevu yok.</td></tr>'; return; }
+
+        list.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
+
+        list.forEach(item => {
+            const noteIcon = item.note ? '<i class="fas fa-sticky-note" style="color:var(--info)"></i>' : '';
+            tbody.innerHTML += `
+                <tr>
+                    <td><div style="font-weight:700; color:var(--gold)">${item.date}</div><div style="font-size:12px; color:#888">${item.time}</div></td>
+                    <td>${item.customer} ${noteIcon}</td>
+                    <td><div>${item.staff}</div><div style="font-size:12px; color:#aaa">${item.service}</div></td>
+                    <td style="font-weight:700; color:var(--success)">${item.price} ₺</td>
+                    <td style="text-align:right;">
+                        <div class="action-group" style="justify-content: flex-end;">
+                            <button class="btn-icon btn-view" onclick="inspectAppt('${item.id}')" title="İncele"><i class="fas fa-eye"></i></button>
+                            <button class="btn-icon btn-check" onclick="completeAppt('${item.id}')" title="Tamamla"><i class="fas fa-check"></i></button>
+                            <button class="btn-icon btn-trash" onclick="cancelAppt('${item.id}')" title="İptal Et"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function inspectAppt(id) {
+        const list = getData('appointments');
+        const item = list.find(x => x.id == id);
+        if(!item) return;
+
+        const html = `
+            <div class="detail-row"><span class="detail-label">Müşteri:</span> <span class="detail-val">${item.customer}</span></div>
+            <div class="detail-row"><span class="detail-label">Telefon:</span> <span class="detail-val">${item.phone}</span></div>
+            <div class="detail-row"><span class="detail-label">Tarih:</span> <span class="detail-val">${item.date} ${item.time}</span></div>
+            <div class="detail-row"><span class="detail-label">Personel:</span> <span class="detail-val">${item.staff}</span></div>
+            <div class="detail-row"><span class="detail-label">İşlem:</span> <span class="detail-val">${item.service}</span></div>
+            <div class="detail-row"><span class="detail-label">Tutar:</span> <span class="detail-val" style="color:var(--gold); font-size:18px;">${item.price} ₺</span></div>
+            ${item.note ? `<div class="note-highlight"><i class="fas fa-quote-left"></i> ${item.note}</div>` : ''}
+        `;
+        document.getElementById('apptModalContent').innerHTML = html;
+        document.getElementById('modalAppt').classList.add('active');
+    }
+
+    function completeAppt(id) {
+        if(!confirm("Randevu tamamlandı ve ücret kasaya işlenecek. Onaylıyor musun?")) return;
+        
+        let appts = getData('appointments');
+        const index = appts.findIndex(x => x.id == id);
+        if(index === -1) return;
+
+        const completed = appts[index];
+        const accounting = getData('accountingRecords');
+        
+        // ID kontrolü (Çift kayıt önleme)
+        if(!accounting.some(x => x.id == id)) {
+            accounting.push({ ...completed, completedAt: new Date().toISOString() });
+            saveData('accountingRecords', accounting);
+        }
+
+        appts.splice(index, 1);
+        saveData('appointments', appts);
+        
+        renderAppointments();
+        updateDashboard();
+        // alert("İşlem tamamlandı, kasaya işlendi.");
+    }
+
+    function cancelAppt(id) {
+        if(!confirm("Bu randevuyu İPTAL etmek istediğine emin misin? (Para kasaya girmez)")) return;
+        let appts = getData('appointments');
+        const index = appts.findIndex(x => x.id == id);
+        if(index > -1) {
+            appts.splice(index, 1);
+            saveData('appointments', appts);
+            renderAppointments();
+            updateDashboard();
+        }
+    }
+
+    // --- 3. RAPORLAR (FİNANSAL) ---
+    function renderReports() {
+        const selectedMonth = document.getElementById('reportMonth').value; // "YYYY-MM"
+        const accounting = getData('accountingRecords');
+        const team = getData('teamData');
+        const tbody = document.getElementById('report-table-body');
+        
+        // Filtrele
+        const filteredRecords = accounting.filter(rec => rec.completedAt && rec.completedAt.startsWith(selectedMonth));
+        
+        // Toplam Ciro Hesapla
+        const totalRevenue = filteredRecords.reduce((sum, rec) => sum + (rec.price || 0), 0);
+        document.getElementById('monthly-total-display').innerText = formatMoney(totalRevenue);
+
+        tbody.innerHTML = '';
+        
+        team.forEach(member => {
+            // Bu personelin o ayki işleri
+            const jobs = filteredRecords.filter(rec => rec.staff === member.name);
+            const earnings = jobs.reduce((sum, rec) => sum + (rec.price || 0), 0);
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td class="user-cell">
+                        <img src="${member.img || 'img/eren_team.jpeg'}" class="user-avatar" onerror="this.src='https://placehold.co/100'">
+                        <div>${member.name}<br><small style="color:#666">${member.role}</small></div>
+                    </td>
+                    <td>${jobs.length} İşlem</td>
+                    <td style="color:var(--gold); font-weight:700;">${formatMoney(earnings)}</td>
+                </tr>
+            `;
+        });
+    }
+
+    // --- 4. ÇALIŞANLAR ---
+    function renderEmployees() {
+        const list = getData('teamData');
+        const tbody = document.getElementById('emp-table-body');
+        tbody.innerHTML = '';
+
+        list.forEach((emp, index) => {
+            tbody.innerHTML += `
+                <tr style="cursor:pointer;" onclick="openEmpProfile(${index})">
+                    <td class="user-cell">
+                        <img src="${emp.img}" class="user-avatar" onerror="this.src='https://placehold.co/100'">
+                        ${emp.name}
+                    </td>
+                    <td>${emp.role}</td>
+                    <td>${emp.services.length} Hizmet</td>
+                    <td><button class="btn-icon btn-trash" onclick="event.stopPropagation(); deleteItem('teamData', ${index});"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `;
+        });
+    }
+
+    // Çalışan Ekleme
+    document.getElementById('employeeForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const selectedServices = [];
+        document.querySelectorAll('input[name="services"]:checked').forEach(cb => selectedServices.push(cb.value));
+        
+        if(selectedServices.length === 0) { alert("En az bir hizmet seçmelisin dedem."); return; }
+
+        const newEmp = {
+            id: document.getElementById('empName').value.toLowerCase().replace(/\s/g, ''),
+            name: document.getElementById('empName').value,
+            role: document.getElementById('empRole').value,
+            img: document.getElementById('empImg').value,
+            desc: document.getElementById('empDesc').value,
+            services: selectedServices
+        };
+
+        const list = getData('teamData');
+        list.push(newEmp);
+        saveData('teamData', list);
+        
+        renderEmployees();
+        updateDashboard(); // Aktif personel sayısını güncelle
+        e.target.reset();
+        alert("Çalışan başarıyla eklendi!");
+    });
+
+    // Çalışan Detay Modalı (O AYKİ PERFORMANS)
+    function openEmpProfile(index) {
+        const emp = getData('teamData')[index];
+        const accounting = getData('accountingRecords');
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        
+        // Bu personelin bu ayki işleri
+        const jobs = accounting.filter(rec => rec.staff === emp.name && rec.completedAt.startsWith(currentMonth));
+        const totalEarnings = jobs.reduce((sum, rec) => sum + (rec.price || 0), 0);
+
+        let jobsHtml = '';
+        if(jobs.length === 0) {
+            jobsHtml = '<p style="color:#666; font-style:italic;">Bu ay henüz tamamlanmış randevusu yok.</p>';
+        } else {
+            jobsHtml = '<ul style="list-style:none; padding:0;">';
+            jobs.forEach(job => {
+                jobsHtml += `<li style="padding:8px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between; font-size:13px;">
+                    <span>${job.date} - ${job.service}</span>
+                    <span style="color:var(--success)">${job.price} ₺</span>
+                </li>`;
+            });
+            jobsHtml += '</ul>';
+        }
+
+        const html = `
+            <div style="text-align:center; margin-bottom:20px;">
+                <img src="${emp.img}" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--gold); object-fit:cover;">
+                <h2 style="margin:10px 0 5px 0; color:var(--text-main);">${emp.name}</h2>
+                <p style="color:var(--text-muted); margin:0;">${emp.role}</p>
+            </div>
+            
+            <div style="background:#2a2a2a; padding:15px; border-radius:8px; margin-bottom:20px;">
+                <h4 style="margin:0 0 10px 0; color:var(--gold); border-bottom:1px solid #444; padding-bottom:5px;">Bu Ayki Performans</h4>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span>Tamamlanan İş:</span> <strong>${jobs.length}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span>Kazanılan:</span> <strong style="color:var(--gold); font-size:18px;">${formatMoney(totalEarnings)}</strong>
+                </div>
+            </div>
+
+            <div style="background:#2a2a2a; padding:15px; border-radius:8px;">
+                <h4 style="margin:0 0 10px 0; color:#fff; border-bottom:1px solid #444; padding-bottom:5px;">İşlem Geçmişi (${currentMonth})</h4>
+                <div style="max-height:200px; overflow-y:auto;">${jobsHtml}</div>
+            </div>
+        `;
+        
+        document.getElementById('empModalContent').innerHTML = html;
+        document.getElementById('modalEmp').classList.add('active');
+    }
+
+    // --- 5. ÜRÜNLER ---
+    function renderProducts() {
+        const list = getData('productData');
+        const tbody = document.getElementById('prod-table-body');
+        tbody.innerHTML = '';
+        
+        list.forEach((prod, index) => {
+            const isChecked = prod.isFeatured ? 'checked' : '';
+            // Vitrin seçimi için radyo buton
+            tbody.innerHTML += `
+                <tr>
+                    <td style="text-align:center;">
+                        <input type="radio" name="featProd" ${isChecked} onchange="setFeaturedProd(${index})" style="accent-color:var(--gold); cursor:pointer;">
+                    </td>
+                    <td class="user-cell">
+                        <img src="${prod.img}" class="user-avatar" onerror="this.src='https://placehold.co/100'">
+                        ${prod.name}
+                    </td>
+                    <td>${prod.price} ₺</td>
+                    <td><button class="btn-icon btn-trash" onclick="deleteItem('productData', ${index})"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `;
+        });
+    }
+
+    function setFeaturedProd(idx) {
+        const list = getData('productData');
+        list.forEach(p => p.isFeatured = false);
+        list[idx].isFeatured = true;
+        saveData('productData', list);
+        // alert("Vitrin ürünü güncellendi."); // Opsiyonel
+    }
+
+    document.getElementById('productForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const list = getData('productData');
+        list.push({
+            name: document.getElementById('prodName').value,
+            price: document.getElementById('prodPrice').value,
+            img: document.getElementById('prodImg').value,
+            desc: document.getElementById('prodDesc').value,
+            isFeatured: false
+        });
+        if(list.length === 1) list[0].isFeatured = true; // İlk ürünse vitrin yap
+        saveData('productData', list);
+        renderProducts();
+        updateDashboard();
+        e.target.reset();
+        alert("Ürün eklendi!");
+    });
+
+    // --- 6. YORUMLAR ---
+    function renderReviews() {
+        const list = getData('siteReviews');
+        const tbody = document.getElementById('review-table-body');
+        tbody.innerHTML = '';
+        list.forEach((rev, index) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>
+                        <div style="font-weight:bold;">${rev.name}</div>
+                        <div style="font-size:11px; color:#888;">${rev.type}</div>
+                    </td>
+                    <td style="color:var(--gold);">${'★'.repeat(rev.rating)}</td>
+                    <td style="font-size:12px; font-style:italic;">"${rev.comment}"</td>
+                    <td><button class="btn-icon btn-trash" onclick="deleteItem('siteReviews', ${index})"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `;
+        });
+    }
+
+    document.getElementById('reviewForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const list = getData('siteReviews');
+        list.push({
+            name: document.getElementById('revName').value,
+            type: document.getElementById('revTitle').value,
+            rating: document.getElementById('revRating').value,
+            comment: document.getElementById('revComment').value
+        });
+        saveData('siteReviews', list);
+        renderReviews();
+        e.target.reset();
+        alert("Yorum yayınlandı!");
+    });
+
+    // --- ORTAK & YARDIMCI ---
+    function deleteItem(key, index) {
+        if(confirm("Silmek istediğine emin misin?")) {
+            const list = getData(key);
+            list.splice(index, 1);
+            saveData(key, list);
+            // İlgili sekmeyi yenile
+            if(key === 'teamData') renderEmployees();
+            if(key === 'productData') renderProducts();
+            if(key === 'siteReviews') renderReviews();
+            updateDashboard();
+        }
+    }
+
+    function formatMoney(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₺";
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    // Modal dışı tıklama
+    window.onclick = function(e) {
+        if(e.target.classList.contains('modal-overlay')) {
+            e.target.classList.remove('active');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('isAdminLoggedIn');
+        window.location.href = 'admin-login.html';
+    }
+
+    // --- SİSTEMİ SIFIRLA ---
+    function resetSystem() {
+        if(confirm('⚠️ DİKKAT: Tüm veriler (Randevular, Çalışanlar, Ciro, Ürünler) KALICI OLARAK silinecek!\n\nSistemi fabrika ayarlarına döndürmek istediğine emin misin?')) {
+            localStorage.clear();
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            alert('Sistem sıfırlandı. Sayfa yenileniyor...');
+            location.reload();
+        }
+    }
+    
+
+</script>
+
+</body>
+</html>
