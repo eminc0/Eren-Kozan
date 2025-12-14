@@ -326,7 +326,7 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         }
     }
 
-    // 🌟 SENIOR DOKUNUŞU: SAATLERİ RENDER ET (GEÇMİŞ ZAMAN + MEŞGULİYET KONTROLÜ) 🌟
+    // 🌟 SENIOR DOKUNUŞU: SAATLERİ RENDER ET (SABİT 1 SAAT BLOKLAMA) 🌟
     function renderTimeSlots() {
         const dateInput = document.querySelector('input[name="date"]:checked');
         const staffInput = document.querySelector('input[name="staff"]:checked');
@@ -341,34 +341,43 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         // 1. MEŞGULİYET LİSTESİ HAZIRLA
         const allAppointments = JSON.parse(localStorage.getItem('appointments')) || [];
         const busyIntervals = [];
+        
         allAppointments.filter(app => app.date === selectedDate && app.staff === selectedStaffName).forEach(app => {
             const startMins = timeToMins(app.time);
-            const duration = parseInt(app.duration) || 30; 
+            
+            // 🛑 KRİTİK DEĞİŞİKLİK BURADA:
+            // Hizmet süresi ne olursa olsun (duration), sistemi her randevuyu 
+            // SABİT 60 DAKİKA (1 Saat) yer kaplıyor gibi ayarladık.
+            const duration = 60; 
+            
             busyIntervals.push({ start: startMins, end: startMins + duration });
         });
 
-        // 2. SEÇİLEN HİZMET SÜRESİ
-        let currentSelectionDuration = 0;
-        document.querySelectorAll('input[name="service"]:checked').forEach(cb => {
-            currentSelectionDuration += parseInt(cb.getAttribute('data-duration'));
-        });
-
-        // 3. BUGÜNÜN ZAMANI (Geçmiş saatleri engellemek için)
+        // 2. BUGÜNÜN ZAMANI (Geçmiş saatleri engellemek için)
         const now = new Date();
-        const todayStr = now.toISOString().split('T')[0]; // "YYYY-MM-DD"
+        // Yerel saat düzeltmesi (Timezone)
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
+        
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
         const isToday = (selectedDate === todayStr);
 
-        // 4. MESAİ SAATLERİ (10:00 - 22:00)
+        // 3. MESAİ SAATLERİ (10:00 - 22:00)
         const startHour = 10;
         const endHour = 22;
-        const shopClosingMins = endHour * 60; // 1320
+        // Kapanışa 1 saat kala (21:00) son randevu alınabilir (22:00'da biter)
+        // Eğer 21:30'a randevu verilirse 22:30'da biter, bunu engellemek istersen aşağıyı ayarlarız.
+        // Şimdilik sadece kapanış saatini sınır alıyoruz.
+        const shopClosingMins = endHour * 60; 
 
         for (let h = startHour; h < endHour; h++) {
             ['00', '30'].forEach(m => {
                 const timeStr = `${h}:${m}`;
                 const slotStart = timeToMins(timeStr);
-                const slotEnd = slotStart + currentSelectionDuration; // İşin bitiş zamanı
+                // Yeni randevu da standart 60 dk sürecek kabul ediyoruz (Çakışma kontrolü için)
+                const slotEnd = slotStart + 60; 
 
                 let isBlocked = false;
 
@@ -377,17 +386,26 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
                     isBlocked = true;
                 }
 
-                // KONTROL B: KAPANIŞ SAATİNİ GEÇİYOR MU?
+                // KONTROL B: KAPANIŞ SAATİNİ GEÇİYOR MU? (22:00'da dükkan kapanıyorsa en son randevu 21:00 olur)
                 if (slotEnd > shopClosingMins) {
                     isBlocked = true;
                 }
 
-                // KONTROL C: BAŞKA RANDEVUYLA ÇAKIŞIYOR MU?
+                // KONTROL C: BAŞKA RANDEVUYLA ÇAKIŞIYOR MU? (1 SAAT ARAYLA)
                 if (!isBlocked) {
                     for (let interval of busyIntervals) {
-                        // Slotun başlangıcı dolu aralıkta mı? VEYA İş bitmeden dolu aralığa giriyor mu?
-                        if ((slotStart >= interval.start && slotStart < interval.end) || 
-                            (slotStart < interval.start && slotEnd > interval.start)) {
+                        // Eğer bu saat dilimi, dolu olan bir aralığın içine denk geliyorsa kapat.
+                        // Örn: Dolu [14:30 - 15:30]. Slot: 15:00.
+                        // 15:00 >= 14:30 VE 15:00 < 15:30 -> EVET, ÇAKIŞIYOR.
+                        if (slotStart >= interval.start && slotStart < interval.end) {
+                            isBlocked = true;
+                            break;
+                        }
+                        
+                        // Ayrıca, yeni alacağımız randevu (60dk) mevcut bir randevunun üstüne biniyor mu?
+                        // Örn: Dolu [15:00 - 16:00]. Slot: 14:30 (Bitişi 15:30).
+                        // 14:30 < 15:00 AMA 15:30 > 15:00 -> EVET, ÇAKIŞIYOR.
+                        if (slotStart < interval.start && slotEnd > interval.start) {
                             isBlocked = true;
                             break;
                         }
@@ -557,7 +575,7 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         localStorage.setItem('appointments', JSON.stringify(appointments));
 
         alert(`Randevunuz Alındı!\n\nToplam: ${totalPrice} ₺\nSüre: ${totalDuration} Dk`);
-        window.location.href = './index.html';
+        window.location.href = 'index.html';
     }
 </script>
 
