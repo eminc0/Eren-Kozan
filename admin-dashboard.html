@@ -216,102 +216,109 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .slot-time { font-size: 10px; opacity: 0.7; }
 .slot-status { font-size: 13px; }
 
-/* --- 📱 MOBİL UYUMLULUK (RESPONSIVE TASARIM) --- */
-    @media screen and (max-width: 768px) {
-        
-        /* 1. SIDEBAR'I DARALT (SADECE İKON YAP) */
-        .sidebar {
-            width: 70px;
-            padding: 15px 5px;
-            text-align: center;
-        }
-        .sidebar .brand {
-            font-size: 10px; /* Logoyu küçült */
-            letter-spacing: 0;
-        }
-        .sidebar .menu-item {
-            flex-direction: column; /* İkonu ve yazıyı alt alta al */
-            justify-content: center;
-            font-size: 9px; /* Yazıyı minik yap */
-            padding: 10px 2px;
-            text-align: center;
-            gap: 5px;
-        }
-        .sidebar .menu-item i {
-            font-size: 20px; /* İkonu büyüt */
-            width: auto;
-            margin-bottom: 2px;
-        }
-        .sidebar-footer .btn-logout, 
-        .sidebar-footer .btn-reset, 
-        .sidebar-footer a {
-            font-size: 0; /* Buton yazılarını gizle */
-            padding: 10px;
-        }
-        .sidebar-footer .btn-logout i,
-        .sidebar-footer .btn-reset i,
-        .sidebar-footer a i {
-            font-size: 18px; /* Sadece ikonları göster */
-            margin: 0;
-        }
-
-        /* 2. ANA İÇERİĞİ DÜZENLE */
-        .main-content {
-            margin-left: 70px; /* Sidebar kadar boşluk bırak */
-            width: calc(100% - 70px);
-            padding: 15px;
-        }
-        .page-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        .page-title {
-            font-size: 20px;
-        }
-
-        /* 3. İSTATİSTİK KARTLARI */
-        .stats-grid {
-            grid-template-columns: 1fr; /* Kartları alt alta diz */
-            gap: 15px;
-        }
-        .stat-card {
-            padding: 15px;
-        }
-
-        /* 4. TABLOLAR (TAŞMAYI ENGELLE) */
-        .card-panel {
-            overflow-x: auto; /* Sağa sola kaydırma ekle */
-        }
-        table {
-            min-width: 600px; /* Tabloyu sıkıştırma, kaydırılsın */
-        }
-        th, td {
-            padding: 10px;
-            font-size: 12px;
-        }
-        .user-avatar {
-            width: 30px;
-            height: 30px;
-        }
-
-        /* 5. FORM VE BUTONLAR */
-        .form-grid {
-            grid-template-columns: 1fr; /* Formları tek sütun yap */
-        }
-        .service-selector {
-            grid-template-columns: 1fr; /* Hizmetleri alt alta diz */
-        }
-        
-        /* 6. MODAL (PENCERE) AYARLARI */
-        .modal-box {
-            width: 95%;
-            max-height: 85vh; /* Ekranı taşmasın */
-        }
-        .modal-header h3 {
-            font-size: 16px;
-        }
+/* --- 📱 MOBİL UYUMLULUK (V2 - GELİŞTİRİLMİŞ) --- */
+@media screen and (max-width: 768px) {
+    
+    /* 1. SIDEBAR DÜZENİ */
+    .sidebar {
+        width: 60px;
+        padding: 10px 0;
+        text-align: center;
+        overflow: hidden;
     }
+    .sidebar .brand, .sidebar .menu-item span { /* İkon yanındaki yazıları gizle */
+        display: none; 
+    }
+    .sidebar .menu-item {
+        justify-content: center;
+        padding: 15px 0;
+    }
+    .sidebar .menu-item i {
+        font-size: 20px;
+        margin: 0;
+    }
+    /* Footer butonlarını sadece ikon yap */
+    .sidebar-footer button, .sidebar-footer a {
+        font-size: 0; 
+        padding: 10px;
+        justify-content: center;
+    }
+    .sidebar-footer i { font-size: 18px; margin: 0; }
+
+    /* 2. ANA İÇERİK ALANI */
+    .main-content {
+        margin-left: 60px; /* Sidebar kadar boşluk */
+        width: calc(100% - 60px);
+        padding: 15px; /* Mobilde kenar boşluğunu azalt */
+    }
+
+    /* 3. BAŞLIK VE TARİH */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    .page-title { font-size: 18px; }
+
+    /* 4. TAKVİM KONTROLLERİ (SORUNLU KISIM BURASIYDI) */
+    .calendar-controls {
+        flex-direction: column; /* Alt alta diz */
+        align-items: stretch; /* Tam genişlik yap */
+        gap: 10px;
+        padding: 15px;
+    }
+    .calendar-controls label { margin-bottom: 5px; }
+    .calendar-controls input, 
+    .calendar-controls button {
+        width: 100% !important; /* Kutuyu tam doldur */
+        margin: 0;
+        height: 45px; /* Parmakla basmak kolay olsun */
+    }
+    .calendar-controls span {
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    /* 5. TABLOLAR VE MATRİS */
+    .card-panel {
+        padding: 10px;
+        overflow-x: auto; /* Yatay kaydırma aç */
+        -webkit-overflow-scrolling: touch; /* Akıcı kaydırma */
+    }
+    
+    /* Tabloyu Sıkıştırma, Kaydırılsın */
+    table {
+        width: 100%;
+        min-width: 600px; /* Tablo içeriği en az bu kadar olsun, sığmazsa kayar */
+    }
+    
+    /* Hücreleri Küçült */
+    th, td {
+        padding: 8px 5px;
+        font-size: 11px;
+        white-space: nowrap; /* Yazılar alt satıra düşmesin */
+    }
+
+    /* Takvim Slotlarını Düzenle */
+    .slot-btn {
+        height: 45px; /* Daha kısa kutular */
+        padding: 5px;
+    }
+    .slot-time { font-size: 9px; display: none; } /* Mobilde "Ekle+" yazısı sığsın diye saati gizleyebiliriz veya küçültebiliriz */
+    .slot-status { font-size: 10px; font-weight: bold; }
+
+    /* 6. İSTATİSTİK KARTLARI */
+    .stats-grid {
+        grid-template-columns: 1fr; /* Tek sütun */
+        gap: 15px;
+    }
+
+    /* 7. MODAL (POPUP) */
+    .modal-box {
+        width: 95%;
+        max-height: 80vh;
+    }
+}
 
 </style>
 </head>
