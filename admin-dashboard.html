@@ -189,42 +189,129 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .detail-val { color: #fff; text-align: right; }
 .note-highlight { background: rgba(52, 152, 219, 0.1); border-left: 4px solid var(--info); padding: 15px; margin-top: 15px; color: #ddd; font-style: italic; }
 
-/* --- MOBİL İYİLEŞTİRMELERİ --- */
-@media (max-width: 768px) {
-    /* 1. Sidebar'ı mobilde tamamen gizle veya alta al (Basit çözüm: İkon bar yap) */
-    .sidebar { 
-        width: 60px; 
-        padding: 10px 5px; 
-    }
-    .sidebar .brand, .sidebar .menu-text { 
-        display: none; /* Yazıları gizle, sadece ikon kalsın */
-    }
-    .main-content { 
-        margin-left: 60px; /* İçeriği sola çek */
-        width: calc(100% - 60px);
-        padding: 15px; /* Boşlukları azalt */
-    }
-
-    /* 2. Tabloların taşmasını engelle (Kaydırma çubuğu çıkar) */
-    .table-responsive {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch; /* Mobilde akıcı kaydırma */
-    }
-    
-    /* 3. Modal (Popup) boyutlarını ayarla */
-    .modal-box {
-        width: 95%;
-        max-height: 85vh; /* Ekran boyunu taşmasın */
-    }
-    
-    /* 4. Yazı boyutlarını tıkla okunur yap */
-    th, td {
-        font-size: 12px;
-        padding: 10px;
-    }
+/* --- TAKVİM MATRİSİ --- */
+.calendar-controls {
+    display: flex; gap: 15px; margin-bottom: 20px; align-items: center;
+    background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid var(--border);
 }
+.matrix-table { width: 100%; border-collapse: separate; border-spacing: 4px; }
+.matrix-table th { background: #333; color: var(--gold); text-align: center; padding: 10px; border-radius: 4px; position: sticky; top: 0; z-index: 10; }
+.matrix-table td { padding: 0; }
+
+.slot-btn {
+    width: 100%; padding: 12px 5px; border: none; border-radius: 4px; 
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    height: 60px;
+}
+
+/* Boş Slot (Yeşilimsi) */
+.slot-empty { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3); }
+.slot-empty:hover { background: #27ae60; color: #fff; }
+
+/* Dolu Slot (Kırmızımsı) */
+.slot-busy { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); cursor: not-allowed; }
+
+/* Slot İçeriği */
+.slot-time { font-size: 10px; opacity: 0.7; }
+.slot-status { font-size: 13px; }
+
+/* --- 📱 MOBİL UYUMLULUK (RESPONSIVE TASARIM) --- */
+    @media screen and (max-width: 768px) {
+        
+        /* 1. SIDEBAR'I DARALT (SADECE İKON YAP) */
+        .sidebar {
+            width: 70px;
+            padding: 15px 5px;
+            text-align: center;
+        }
+        .sidebar .brand {
+            font-size: 10px; /* Logoyu küçült */
+            letter-spacing: 0;
+        }
+        .sidebar .menu-item {
+            flex-direction: column; /* İkonu ve yazıyı alt alta al */
+            justify-content: center;
+            font-size: 9px; /* Yazıyı minik yap */
+            padding: 10px 2px;
+            text-align: center;
+            gap: 5px;
+        }
+        .sidebar .menu-item i {
+            font-size: 20px; /* İkonu büyüt */
+            width: auto;
+            margin-bottom: 2px;
+        }
+        .sidebar-footer .btn-logout, 
+        .sidebar-footer .btn-reset, 
+        .sidebar-footer a {
+            font-size: 0; /* Buton yazılarını gizle */
+            padding: 10px;
+        }
+        .sidebar-footer .btn-logout i,
+        .sidebar-footer .btn-reset i,
+        .sidebar-footer a i {
+            font-size: 18px; /* Sadece ikonları göster */
+            margin: 0;
+        }
+
+        /* 2. ANA İÇERİĞİ DÜZENLE */
+        .main-content {
+            margin-left: 70px; /* Sidebar kadar boşluk bırak */
+            width: calc(100% - 70px);
+            padding: 15px;
+        }
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .page-title {
+            font-size: 20px;
+        }
+
+        /* 3. İSTATİSTİK KARTLARI */
+        .stats-grid {
+            grid-template-columns: 1fr; /* Kartları alt alta diz */
+            gap: 15px;
+        }
+        .stat-card {
+            padding: 15px;
+        }
+
+        /* 4. TABLOLAR (TAŞMAYI ENGELLE) */
+        .card-panel {
+            overflow-x: auto; /* Sağa sola kaydırma ekle */
+        }
+        table {
+            min-width: 600px; /* Tabloyu sıkıştırma, kaydırılsın */
+        }
+        th, td {
+            padding: 10px;
+            font-size: 12px;
+        }
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* 5. FORM VE BUTONLAR */
+        .form-grid {
+            grid-template-columns: 1fr; /* Formları tek sütun yap */
+        }
+        .service-selector {
+            grid-template-columns: 1fr; /* Hizmetleri alt alta diz */
+        }
+        
+        /* 6. MODAL (PENCERE) AYARLARI */
+        .modal-box {
+            width: 95%;
+            max-height: 85vh; /* Ekranı taşmasın */
+        }
+        .modal-header h3 {
+            font-size: 16px;
+        }
+    }
 
 </style>
 </head>
@@ -239,6 +326,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         <div class="menu-item" onclick="showSection('employees')"><i class="fas fa-user-tie"></i> Çalışanlar</div>
         <div class="menu-item" onclick="showSection('products')"><i class="fas fa-box-open"></i> Ürünler</div>
         <div class="menu-item" onclick="showSection('reviews')"><i class="fas fa-star"></i> Yorumlar</div>
+        <div class="menu-item" onclick="showSection('calendar')"><i class="fas fa-calendar-alt"></i> Takvim / Müsaitlik</div>
     </div>
     <div class="sidebar-footer">
         <button onclick="resetSystem()" class="btn-reset"><i class="fas fa-trash-alt"></i> Sistemi Sıfırla</button>
@@ -299,6 +387,26 @@ tr:hover td { background: rgba(255,255,255,0.02); }
                         </tbody>
                 </table>
             </div>
+        </div>
+    </section>
+
+    <section id="calendar" class="section">
+        <div class="page-header"><h1 class="page-title">Personel Müsaitlik Durumu</h1></div>
+
+        <div class="calendar-controls">
+            <label style="color:#aaa;">Tarih Seç:</label>
+            <input type="date" id="matrixDate" class="form-input" style="width:auto;" onchange="renderMatrix()">
+            <button class="btn btn-primary" onclick="renderMatrix()"><i class="fas fa-sync"></i> Yenile</button>
+            <span style="margin-left:auto; font-size:12px; color:#666;">*Telefondan arayan müşteriyi eklemek için BOŞ kutuya tıkla.</span>
+        </div>
+
+        <div class="card-panel" style="overflow-x:auto;">
+            <table class="matrix-table">
+                <thead id="matrixHead">
+                    </thead>
+                <tbody id="matrixBody">
+                    </tbody>
+            </table>
         </div>
     </section>
 
@@ -511,6 +619,10 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         if(id === 'employees') renderEmployees();
         if(id === 'products') renderProducts();
         if(id === 'reviews') renderReviews();
+        if(id === 'appointments') renderAppointments();
+        if(id === 'reports') renderReports();
+        if(id === 'calendar') renderMatrix(); // 👈 YENİ: Takvim sekmesine basınca matrisi çiz
+        //
     }
 
     // --- 1. DASHBOARD ---
@@ -877,6 +989,101 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         }
     }
     
+    // --- 7. TAKVİM MATRİSİ (TELEFON RANDEVUSU) ---
+    
+    function renderMatrix() {
+        const dateInput = document.getElementById('matrixDate');
+        if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0]; // Bugün seçili gelsin
+        
+        const selectedDate = dateInput.value;
+        const team = getData('teamData');
+        const appointments = getData('appointments');
+        const thead = document.getElementById('matrixHead');
+        const tbody = document.getElementById('matrixBody');
+
+        // 1. Başlıkları (Personel İsimleri) Oluştur
+        let headHtml = '<tr><th>Saat</th>';
+        team.forEach(emp => {
+            headHtml += `<th>${emp.name}</th>`;
+        });
+        headHtml += '</tr>';
+        thead.innerHTML = headHtml;
+
+        // 2. Saat Dilimlerini Döngüye Al (10:00 - 22:00)
+        tbody.innerHTML = '';
+        const startHour = 10;
+        const endHour = 22;
+
+        for (let h = startHour; h < endHour; h++) {
+            ['00', '30'].forEach(m => {
+                const timeStr = `${h}:${m}`;
+                let rowHtml = `<tr><td style="text-align:center; font-weight:bold; color:#666;">${timeStr}</td>`;
+
+                // Her personel için o saati kontrol et
+                team.forEach(emp => {
+                    // Bu saatte bu personelin randevusu var mı?
+                    // NOT: 1 Saatlik bloklama mantığı burada da geçerli olsun mu? 
+                    // Basitlik adına direkt çakışma var mı ona bakıyoruz.
+                    const isBusy = appointments.find(app => 
+                        app.date === selectedDate && 
+                        app.staff === emp.name && 
+                        app.time === timeStr
+                    );
+
+                    if (isBusy) {
+                        // DOLU KUTU
+                        rowHtml += `
+                            <td>
+                                <div class="slot-btn slot-busy" title="${isBusy.customer} (${isBusy.service})">
+                                    <span class="slot-status">DOLU</span>
+                                    <span class="slot-time" style="font-size:9px;">${isBusy.customer.substring(0,8)}..</span>
+                                </div>
+                            </td>`;
+                    } else {
+                        // BOŞ KUTU (Tıklayınca Randevu Al)
+                        rowHtml += `
+                            <td>
+                                <button class="slot-btn slot-empty" onclick="quickBook('${selectedDate}', '${timeStr}', '${emp.name}')">
+                                    <span class="slot-status">BOŞ</span>
+                                    <span class="slot-time">Ekle +</span>
+                                </button>
+                            </td>`;
+                    }
+                });
+
+                rowHtml += '</tr>';
+                tbody.innerHTML += rowHtml;
+            });
+        }
+    }
+
+    // TELEFONLA HIZLI RANDEVU EKLEME
+    function quickBook(date, time, staffName) {
+        const customerName = prompt(`📞 TELEFON RANDEVUSU\n\nPersonel: ${staffName}\nTarih: ${date} Saat: ${time}\n\nMüşterinin Adı Soyadı:`);
+
+        if (customerName) {
+            const newAppt = {
+                id: Date.now(),
+                staff: staffName,
+                service: "Telefon Randevusu", // Varsayılan hizmet
+                price: 0, // Telefonda fiyat belli olmayabilir, 0 girilir, işlem bitince düzeltilir
+                duration: 60, // Telefonda standart 1 saat kapatalım
+                date: date,
+                time: time,
+                customer: customerName + " (Tel)",
+                phone: "-",
+                note: "Dükkandan manuel eklendi",
+                status: 'Bekliyor'
+            };
+
+            const list = getData('appointments');
+            list.push(newAppt);
+            saveData('appointments', list);
+            
+            renderMatrix(); // Tabloyu yenile
+            alert("✅ Randevu başarıyla kapatıldı!");
+        }
+    }
 
 </script>
 
