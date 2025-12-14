@@ -10,136 +10,65 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-/* --- 1. CORE STYLES (PREMIUM DARK THEME) --- */
-:root {
-    --bg-dark: #121212;
-    --bg-panel: #1e1e1e;
-    --text-main: #e0e0e0;
-    --text-muted: #a0a0a0;
-    --gold: #c5a059;
-    --gold-hover: #b08d4e;
-    --danger: #e74c3c;
-    --success: #27ae60;
-    --info: #3498db;
-    --border: #333;
-}
-
+/* --- 1. CORE STYLES --- */
+:root { --bg-dark: #121212; --bg-panel: #1e1e1e; --text-main: #e0e0e0; --text-muted: #a0a0a0; --gold: #c5a059; --gold-hover: #b08d4e; --danger: #e74c3c; --success: #27ae60; --info: #3498db; --border: #333; }
 * { box-sizing: border-box; outline: none; }
+body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-body {
-    margin: 0; font-family: 'Inter', sans-serif;
-    background-color: var(--bg-dark); color: var(--text-main);
-    display: flex; height: 100vh; overflow: hidden;
-}
-
-/* --- 2. SIDEBAR --- */
-.sidebar {
-    width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; padding: 20px;
-    transition: all 0.3s ease;
-}
-
-.brand {
-    font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: var(--gold);
-    text-align: center; padding-bottom: 20px; margin-bottom: 20px;
-    border-bottom: 1px solid var(--border); letter-spacing: 1px;
-}
-
+/* --- SIDEBAR (Masaüstü) --- */
+.sidebar { width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; transition: all 0.3s ease; z-index: 1000; }
+.brand { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: var(--gold); text-align: center; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border); letter-spacing: 1px; }
 .menu { flex: 1; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-
-.menu-item {
-    padding: 12px 15px; color: var(--text-muted); text-decoration: none;
-    border-radius: 8px; font-size: 14px; font-weight: 500;
-    display: flex; align-items: center; gap: 12px; transition: all 0.2s;
-    cursor: pointer; border: 1px solid transparent;
-}
-
-.menu-item:hover, .menu-item.active {
-    background: rgba(197, 160, 89, 0.1); color: var(--gold);
-    border-color: rgba(197, 160, 89, 0.2);
-}
-
+.menu-item { padding: 12px 15px; color: var(--text-muted); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 12px; transition: all 0.2s; cursor: pointer; border: 1px solid transparent; }
+.menu-item:hover, .menu-item.active { background: rgba(197, 160, 89, 0.1); color: var(--gold); border-color: rgba(197, 160, 89, 0.2); }
 .menu-item i { width: 20px; text-align: center; }
-
 .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
-
-.btn-logout {
-    background: transparent; border: 1px solid var(--danger); color: var(--danger);
-    padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: all 0.3s;
-}
+.btn-logout { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
 .btn-logout:hover { background: var(--danger); color: #fff; }
-
-.btn-reset {
-    background: transparent; border: 1px solid #f39c12; color: #f39c12;
-    padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: all 0.3s;
-}
+.btn-reset { background: transparent; border: 1px solid #f39c12; color: #f39c12; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
 .btn-reset:hover { background: #f39c12; color: #000; }
 
-/* --- 3. MAIN CONTENT --- */
-.main-content {
-    flex: 1; padding: 30px; overflow-y: auto; position: relative;
-}
-
+/* --- MAIN CONTENT --- */
+.main-content { flex: 1; padding: 30px; overflow-y: auto; position: relative; width: calc(100% - 260px); } /* Masaüstünde genişlik ayarı */
 .section { display: none; animation: fadeIn 0.4s ease; }
 .section.active { display: block; }
-
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.page-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px;
-}
+/* Header & Hamburger */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+.header-left { display: flex; align-items: center; gap: 15px; }
 .page-title { font-family: 'Cinzel', serif; font-size: 28px; color: var(--gold); margin: 0; }
+.hamburger-btn { display: none; background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; } 
 
-/* --- DASHBOARD STATS --- */
+/* STATS */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
-.stat-card {
-    background: var(--bg-panel); padding: 25px; border-radius: 12px; border: 1px solid var(--border);
-    display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-.stat-icon {
-    width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-    font-size: 24px; color: #fff;
-}
+.stat-card { background: var(--bg-panel); padding: 25px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.stat-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; }
 .icon-blue { background: linear-gradient(135deg, #3498db, #2980b9); }
 .icon-gold { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 .icon-green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
 .icon-red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-
 .stat-info h4 { margin: 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 .stat-info p { margin: 5px 0 0 0; font-size: 24px; font-weight: 700; color: var(--text-main); }
 
-/* --- TABLES & LISTS --- */
-.card-panel {
-    background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border);
-    overflow: hidden; margin-bottom: 30px;
-}
-.panel-header {
-    padding: 20px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-}
+/* TABLES & LISTS */
+.card-panel { background: var(--bg-panel); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 30px; }
+.panel-header { padding: 20px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .panel-title { margin: 0; font-size: 18px; font-weight: 600; color: var(--gold); }
-
 table { width: 100%; border-collapse: collapse; }
 th { text-align: left; padding: 15px 20px; color: var(--text-muted); font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--border); }
 td { padding: 15px 20px; border-bottom: 1px solid var(--border); color: var(--text-main); font-size: 14px; vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
 tr:hover td { background: rgba(255,255,255,0.02); }
-
 .user-cell { display: flex; align-items: center; gap: 10px; }
 .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
 
-/* BUTTONS & ACTIONS */
+/* BUTTONS */
 .btn { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; }
 .btn-primary { background: var(--gold); color: #000; }
 .btn-primary:hover { background: var(--gold-hover); }
 .btn-sm { padding: 6px 10px; font-size: 12px; }
-
-.action-group { display: flex; gap: 5px; }
+.action-group { display: flex; gap: 5px; justify-content: flex-end; }
 .btn-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: none; cursor: pointer; color: #fff; transition: 0.2s; }
 .btn-view { background: var(--info); }
 .btn-check { background: var(--success); }
@@ -150,194 +79,107 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
 .form-group { margin-bottom: 15px; }
 .form-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); }
-.form-input {
-    width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid var(--border);
-    color: #fff; border-radius: 6px; transition: border-color 0.3s;
-}
+.form-input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid var(--border); color: #fff; border-radius: 6px; transition: border-color 0.3s; }
 .form-input:focus { border-color: var(--gold); }
-
-/* SERVICE CHECKBOXES */
-.service-selector {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    background: #2a2a2a; padding: 15px; border-radius: 6px; border: 1px solid var(--border);
-}
+.service-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #2a2a2a; padding: 15px; border-radius: 6px; border: 1px solid var(--border); }
 .cb-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #ddd; cursor: pointer; }
 .cb-item input { accent-color: var(--gold); transform: scale(1.2); }
 
+/* CALENDAR MATRIX */
+.calendar-controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
+.matrix-table { width: 100%; border-collapse: separate; border-spacing: 4px; }
+.matrix-table th { background: #333; color: var(--gold); text-align: center; padding: 10px; border-radius: 4px; }
+.matrix-table td { padding: 0; }
+.slot-btn { width: 100%; padding: 12px 5px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; height: 60px; }
+.slot-empty { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3); }
+.slot-empty:hover { background: #27ae60; color: #fff; }
+.slot-busy { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); cursor: not-allowed; }
+.slot-time { font-size: 10px; opacity: 0.7; }
+.slot-status { font-size: 13px; }
+
 /* MODAL */
-.modal-overlay {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
-    backdrop-filter: blur(5px);
-}
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
-.modal-box {
-    background: var(--bg-panel); width: 90%; max-width: 600px; border-radius: 12px;
-    border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-.modal-header {
-    background: var(--bg-dark); padding: 15px 25px; border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-}
+.modal-box { background: var(--bg-panel); width: 90%; max-width: 600px; border-radius: 12px; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+.modal-header { background: var(--bg-dark); padding: 15px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .modal-header h3 { margin: 0; color: var(--gold); font-family: 'Cinzel', serif; }
 .btn-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
 .btn-close:hover { color: #fff; }
 .modal-body { padding: 25px; max-height: 70vh; overflow-y: auto; }
-
 .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
 .detail-label { color: var(--text-muted); font-weight: 600; }
 .detail-val { color: #fff; text-align: right; }
 .note-highlight { background: rgba(52, 152, 219, 0.1); border-left: 4px solid var(--info); padding: 15px; margin-top: 15px; color: #ddd; font-style: italic; }
 
-/* --- TAKVİM MATRİSİ --- */
-.calendar-controls {
-    display: flex; gap: 15px; margin-bottom: 20px; align-items: center;
-    background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid var(--border);
-}
-.matrix-table { width: 100%; border-collapse: separate; border-spacing: 4px; }
-.matrix-table th { background: #333; color: var(--gold); text-align: center; padding: 10px; border-radius: 4px; position: sticky; top: 0; z-index: 10; }
-.matrix-table td { padding: 0; }
+/* SIDEBAR OVERLAY (MOBİL İÇİN) */
+.sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; backdrop-filter: blur(3px); }
 
-.slot-btn {
-    width: 100%; padding: 12px 5px; border: none; border-radius: 4px; 
-    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-    height: 60px;
-}
-
-/* Boş Slot (Yeşilimsi) */
-.slot-empty { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3); }
-.slot-empty:hover { background: #27ae60; color: #fff; }
-
-/* Dolu Slot (Kırmızımsı) */
-.slot-busy { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); cursor: not-allowed; }
-
-/* Slot İçeriği */
-.slot-time { font-size: 10px; opacity: 0.7; }
-.slot-status { font-size: 13px; }
-
-/* --- 📱 MOBİL UYUMLULUK (V2 - GELİŞTİRİLMİŞ) --- */
+/* --- 📱 MOBİL UYUMLULUK (HAMBURGER MENÜLÜ) --- */
 @media screen and (max-width: 768px) {
-    
-    /* 1. SIDEBAR DÜZENİ */
+    /* 1. SIDEBAR'I GİZLE VE STİLİNİ DEĞİŞTİR */
     .sidebar {
-        width: 60px;
-        padding: 10px 0;
-        text-align: center;
-        overflow: hidden;
+        position: fixed;
+        left: -280px; /* Ekran dışına it */
+        top: 0;
+        height: 100%;
+        width: 260px; /* Genişliği koru */
+        z-index: 1001; /* Her şeyin üstünde */
+        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
     }
-    .sidebar .brand, .sidebar .menu-item span { /* İkon yanındaki yazıları gizle */
-        display: none; 
+    .sidebar.active {
+        left: 0; /* Açılınca ekrana gir */
     }
-    .sidebar .menu-item {
-        justify-content: center;
-        padding: 15px 0;
+    .sidebar-overlay.active {
+        display: block; /* Menü açılınca arkayı karart */
     }
-    .sidebar .menu-item i {
-        font-size: 20px;
-        margin: 0;
-    }
-    /* Footer butonlarını sadece ikon yap */
-    .sidebar-footer button, .sidebar-footer a {
-        font-size: 0; 
-        padding: 10px;
-        justify-content: center;
-    }
-    .sidebar-footer i { font-size: 18px; margin: 0; }
 
-    /* 2. ANA İÇERİK ALANI */
+    /* 2. ANA İÇERİĞİ TAM EKRAN YAP */
     .main-content {
-        margin-left: 60px; /* Sidebar kadar boşluk */
-        width: calc(100% - 60px);
-        padding: 15px; /* Mobilde kenar boşluğunu azalt */
-    }
-
-    /* 3. BAŞLIK VE TARİH */
-    .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
-    .page-title { font-size: 18px; }
-
-    /* 4. TAKVİM KONTROLLERİ (SORUNLU KISIM BURASIYDI) */
-    .calendar-controls {
-        flex-direction: column; /* Alt alta diz */
-        align-items: stretch; /* Tam genişlik yap */
-        gap: 10px;
+        margin-left: 0;
+        width: 100%;
         padding: 15px;
     }
-    .calendar-controls label { margin-bottom: 5px; }
-    .calendar-controls input, 
-    .calendar-controls button {
-        width: 100% !important; /* Kutuyu tam doldur */
-        margin: 0;
-        height: 45px; /* Parmakla basmak kolay olsun */
-    }
-    .calendar-controls span {
-        text-align: center;
-        margin-top: 5px;
-    }
 
-    /* 5. TABLOLAR VE MATRİS */
-    .card-panel {
-        padding: 10px;
-        overflow-x: auto; /* Yatay kaydırma aç */
-        -webkit-overflow-scrolling: touch; /* Akıcı kaydırma */
+    /* 3. HAMBURGER BUTONUNU GÖSTER */
+    .hamburger-btn {
+        display: block;
+        margin-right: 15px;
     }
     
-    /* Tabloyu Sıkıştırma, Kaydırılsın */
-    table {
-        width: 100%;
-        min-width: 600px; /* Tablo içeriği en az bu kadar olsun, sığmazsa kayar */
-    }
+    /* 4. TABLOLAR VE KARTLAR */
+    .card-panel { overflow-x: auto; }
+    table { min-width: 600px; }
+    .stats-grid { grid-template-columns: 1fr; gap: 15px; }
+    .stat-card { padding: 15px; }
     
-    /* Hücreleri Küçült */
-    th, td {
-        padding: 8px 5px;
-        font-size: 11px;
-        white-space: nowrap; /* Yazılar alt satıra düşmesin */
-    }
-
-    /* Takvim Slotlarını Düzenle */
-    .slot-btn {
-        height: 45px; /* Daha kısa kutular */
-        padding: 5px;
-    }
-    .slot-time { font-size: 9px; display: none; } /* Mobilde "Ekle+" yazısı sığsın diye saati gizleyebiliriz veya küçültebiliriz */
-    .slot-status { font-size: 10px; font-weight: bold; }
-
-    /* 6. İSTATİSTİK KARTLARI */
-    .stats-grid {
-        grid-template-columns: 1fr; /* Tek sütun */
-        gap: 15px;
-    }
-
-    /* 7. MODAL (POPUP) */
-    .modal-box {
-        width: 95%;
-        max-height: 80vh;
-    }
+    /* 5. TAKVİM KONTROLLERİ VE FORM */
+    .calendar-controls { flex-direction: column; align-items: stretch; gap: 10px; }
+    .calendar-controls input, .calendar-controls button { width: 100% !important; height: 45px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .service-selector { grid-template-columns: 1fr; }
+    
+    /* 6. MODAL */
+    .modal-box { width: 95%; max-height: 85vh; }
 }
-
 </style>
 </head>
 <body>
 
-<nav class="sidebar">
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
     <div class="brand">YÖNETİM PANELİ</div>
     <div class="menu">
-        <div class="menu-item active" onclick="showSection('dashboard')"><i class="fas fa-th-large"></i> Genel Bakış</div>
-        <div class="menu-item" onclick="showSection('appointments')"><i class="fas fa-calendar-check"></i> Randevular</div>
-        <div class="menu-item" onclick="showSection('reports')"><i class="fas fa-chart-line"></i> Finansal Rapor</div>
-        <div class="menu-item" onclick="showSection('employees')"><i class="fas fa-user-tie"></i> Çalışanlar</div>
-        <div class="menu-item" onclick="showSection('products')"><i class="fas fa-box-open"></i> Ürünler</div>
-        <div class="menu-item" onclick="showSection('reviews')"><i class="fas fa-star"></i> Yorumlar</div>
-        <div class="menu-item" onclick="showSection('calendar')"><i class="fas fa-calendar-alt"></i> Takvim / Müsaitlik</div>
+        <div class="menu-item active" onclick="showSection('dashboard'); toggleSidebar();"><i class="fas fa-th-large"></i> Genel Bakış</div>
+        <div class="menu-item" onclick="showSection('appointments'); toggleSidebar();"><i class="fas fa-calendar-check"></i> Randevular</div>
+        <div class="menu-item" onclick="showSection('reports'); toggleSidebar();"><i class="fas fa-chart-line"></i> Finansal Rapor</div>
+        <div class="menu-item" onclick="showSection('calendar'); toggleSidebar();"><i class="fas fa-calendar-alt"></i> Takvim</div>
+        <div class="menu-item" onclick="showSection('employees'); toggleSidebar();"><i class="fas fa-user-tie"></i> Çalışanlar</div>
+        <div class="menu-item" onclick="showSection('products'); toggleSidebar();"><i class="fas fa-box-open"></i> Ürünler</div>
+        <div class="menu-item" onclick="showSection('reviews'); toggleSidebar();"><i class="fas fa-star"></i> Yorumlar</div>
     </div>
     <div class="sidebar-footer">
         <button onclick="resetSystem()" class="btn-reset"><i class="fas fa-trash-alt"></i> Sistemi Sıfırla</button>
-        
         <a href="index.html" target="_blank" class="menu-item"><i class="fas fa-external-link-alt"></i> Siteye Git</a>
         <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
     </div>
@@ -347,33 +189,27 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
     <section id="dashboard" class="section active">
         <div class="page-header">
-            <h1 class="page-title">Genel Bakış</h1>
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Genel Bakış</h1>
+            </div>
             <span style="color:#666;" id="currentDateDisplay"></span>
         </div>
-
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon icon-blue"><i class="fas fa-clock"></i></div>
-                <div class="stat-info"><h4>Bekleyen Randevu</h4><p id="stat-appt">0</p></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-green"><i class="fas fa-users"></i></div>
-                <div class="stat-info"><h4>Aktif Personel</h4><p id="stat-emp">0</p></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-red"><i class="fas fa-box"></i></div>
-                <div class="stat-info"><h4>Ürün Sayısı</h4><p id="stat-prod">0</p></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-gold"><i class="fas fa-coins"></i></div>
-                <div class="stat-info"><h4>Bu Ay Ciro</h4><p id="stat-revenue">0 ₺</p></div>
-            </div>
+            <div class="stat-card"><div class="stat-icon icon-blue"><i class="fas fa-clock"></i></div><div class="stat-info"><h4>Bekleyen Randevu</h4><p id="stat-appt">0</p></div></div>
+            <div class="stat-card"><div class="stat-icon icon-gold"><i class="fas fa-coins"></i></div><div class="stat-info"><h4>Toplam Ciro</h4><p id="stat-revenue">0 ₺</p></div></div>
+            <div class="stat-card"><div class="stat-icon icon-green"><i class="fas fa-users"></i></div><div class="stat-info"><h4>Aktif Personel</h4><p id="stat-emp">0</p></div></div>
+            <div class="stat-card"><div class="stat-icon icon-red"><i class="fas fa-box"></i></div><div class="stat-info"><h4>Ürün Sayısı</h4><p id="stat-prod">0</p></div></div>
         </div>
     </section>
 
     <section id="appointments" class="section">
-        <div class="page-header"><h1 class="page-title">Randevu Takibi</h1></div>
-        
+        <div class="page-header">
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Randevu Takibi</h1>
+            </div>
+        </div>
         <div class="card-panel">
             <div class="panel-header">
                 <h3 class="panel-title">Aktif Randevular</h3>
@@ -381,91 +217,67 @@ tr:hover td { background: rgba(255,255,255,0.02); }
             </div>
             <div class="table-responsive">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Tarih & Saat</th>
-                            <th>Müşteri</th>
-                            <th>Hizmet & Personel</th>
-                            <th>Tutar</th>
-                            <th style="text-align:right;">İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody id="appt-table-body">
-                        </tbody>
+                    <thead><tr><th>Tarih & Saat</th><th>Müşteri</th><th>Hizmet & Personel</th><th>Tutar</th><th style="text-align:right;">İşlemler</th></tr></thead>
+                    <tbody id="appt-table-body"></tbody>
                 </table>
             </div>
         </div>
     </section>
 
-    <section id="calendar" class="section">
-        <div class="page-header"><h1 class="page-title">Personel Müsaitlik Durumu</h1></div>
+    <section id="reports" class="section">
+        <div class="page-header">
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Finansal Raporlar</h1>
+            </div>
+            <input type="month" id="reportMonth" class="form-input" style="width:auto;" onchange="renderReports()">
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card" style="border-color:var(--gold);">
+                <div class="stat-icon icon-gold"><i class="fas fa-wallet"></i></div>
+                <div class="stat-info"><h4>Seçilen Ay Ciro</h4><p id="monthly-total-display">0 ₺</p></div>
+            </div>
+        </div>
+        <div class="card-panel">
+            <div class="panel-header"><h3 class="panel-title">Personel Performansı</h3></div>
+            <table><thead><tr><th>Personel</th><th>Tamamlanan İşlem</th><th>Toplam Kazanç</th></tr></thead><tbody id="report-table-body"></tbody></table>
+        </div>
+    </section>
 
+    <section id="calendar" class="section">
+        <div class="page-header">
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Personel Müsaitlik Durumu</h1>
+            </div>
+        </div>
         <div class="calendar-controls">
             <label style="color:#aaa;">Tarih Seç:</label>
             <input type="date" id="matrixDate" class="form-input" style="width:auto;" onchange="renderMatrix()">
             <button class="btn btn-primary" onclick="renderMatrix()"><i class="fas fa-sync"></i> Yenile</button>
             <span style="margin-left:auto; font-size:12px; color:#666;">*Telefondan arayan müşteriyi eklemek için BOŞ kutuya tıkla.</span>
         </div>
-
         <div class="card-panel" style="overflow-x:auto;">
             <table class="matrix-table">
-                <thead id="matrixHead">
-                    </thead>
-                <tbody id="matrixBody">
-                    </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="reports" class="section">
-        <div class="page-header">
-            <h1 class="page-title">Finansal Raporlar</h1>
-            <input type="month" id="reportMonth" class="form-input" style="width:auto;" onchange="renderReports()">
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card" style="border-color:var(--gold);">
-                <div class="stat-icon icon-gold"><i class="fas fa-wallet"></i></div>
-                <div class="stat-info">
-                    <h4>Seçilen Ay Ciro</h4>
-                    <p id="monthly-total-display">0 ₺</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card-panel">
-            <div class="panel-header"><h3 class="panel-title">Personel Performansı</h3></div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Personel</th>
-                        <th>Tamamlanan İşlem</th>
-                        <th>Toplam Kazanç</th>
-                    </tr>
-                </thead>
-                <tbody id="report-table-body"></tbody>
+                <thead id="matrixHead"></thead>
+                <tbody id="matrixBody"></tbody>
             </table>
         </div>
     </section>
 
     <section id="employees" class="section">
-        <div class="page-header"><h1 class="page-title">Çalışan Yönetimi</h1></div>
-
+        <div class="page-header">
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Çalışan Yönetimi</h1>
+            </div>
+        </div>
         <div class="card-panel">
             <div class="panel-header"><h3 class="panel-title">Yeni Çalışan Ekle</h3></div>
             <form id="employeeForm" class="form-grid">
-                <div class="form-group">
-                    <label>Ad Soyad</label>
-                    <input type="text" id="empName" class="form-input" required placeholder="Örn: Ahmet Usta">
-                </div>
-                <div class="form-group">
-                    <label>Ünvan</label>
-                    <input type="text" id="empRole" class="form-input" required placeholder="Örn: Master Barber">
-                </div>
-                <div class="form-group">
-                    <label>Fotoğraf URL</label>
-                    <input type="text" id="empImg" class="form-input" value="img/eren_team.jpeg">
-                </div>
+                <div class="form-group"><label>Ad Soyad</label><input type="text" id="empName" class="form-input" required placeholder="Örn: Ahmet Usta"></div>
+                <div class="form-group"><label>Ünvan</label><input type="text" id="empRole" class="form-input" required placeholder="Örn: Master Barber"></div>
+                <div class="form-group"><label>Fotoğraf URL</label><input type="text" id="empImg" class="form-input" value="img/eren_team.jpeg"></div>
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label>Verdiği Hizmetler (Fiyatlar Sabittir)</label>
                     <div class="service-selector">
@@ -480,28 +292,23 @@ tr:hover td { background: rgba(255,255,255,0.02); }
                         <label class="cb-item"><input type="checkbox" name="services" value="kas-tasarimi"> Kaş Tasarımı (300₺)</label>
                     </div>
                 </div>
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>Açıklama</label>
-                    <textarea id="empDesc" class="form-input" rows="2"></textarea>
-                </div>
-                <div style="grid-column: 1 / -1;">
-                    <button type="submit" class="btn btn-primary" style="width:100%;">Personeli Kaydet</button>
-                </div>
+                <div class="form-group" style="grid-column: 1 / -1;"><label>Açıklama</label><textarea id="empDesc" class="form-input" rows="2"></textarea></div>
+                <div style="grid-column: 1 / -1;"><button type="submit" class="btn btn-primary" style="width:100%;">Personeli Kaydet</button></div>
             </form>
         </div>
-
         <div class="card-panel">
             <div class="panel-header"><h3 class="panel-title">Kadro</h3></div>
-            <table>
-                <thead><tr><th>Personel</th><th>Ünvan</th><th>Hizmet Sayısı</th><th>İşlem</th></tr></thead>
-                <tbody id="emp-table-body"></tbody>
-            </table>
+            <table><thead><tr><th>Personel</th><th>Ünvan</th><th>Hizmet Sayısı</th><th>İşlem</th></tr></thead><tbody id="emp-table-body"></tbody></table>
         </div>
     </section>
 
     <section id="products" class="section">
-        <div class="page-header"><h1 class="page-title">Ürün Yönetimi</h1></div>
-        
+        <div class="page-header">
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Ürün Yönetimi</h1>
+            </div>
+        </div>
         <div class="card-panel">
             <div class="panel-header"><h3 class="panel-title">Yeni Ürün Ekle</h3></div>
             <form id="productForm" class="form-grid">
@@ -512,25 +319,19 @@ tr:hover td { background: rgba(255,255,255,0.02); }
                 <div style="grid-column: 1 / -1;"><button type="submit" class="btn btn-primary" style="width:100%;">Ürünü Ekle</button></div>
             </form>
         </div>
-
         <div class="card-panel">
             <div class="panel-header"><h3 class="panel-title">Ürün Listesi</h3></div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Vitrin</th> <th>Ürün</th>
-                        <th>Fiyat</th>
-                        <th>İşlem</th>
-                    </tr>
-                </thead>
-                <tbody id="prod-table-body"></tbody>
-            </table>
+            <table><thead><tr><th>Vitrin</th><th>Ürün</th><th>Fiyat</th><th>İşlem</th></tr></thead><tbody id="prod-table-body"></tbody></table>
         </div>
     </section>
 
     <section id="reviews" class="section">
-        <div class="page-header"><h1 class="page-title">Yorum Yönetimi</h1></div>
-        
+        <div class="page-header">
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Yorum Yönetimi</h1>
+            </div>
+        </div>
         <div class="card-panel">
             <div class="panel-header"><h3 class="panel-title">Yorum Ekle</h3></div>
             <form id="reviewForm" class="form-grid">
@@ -541,7 +342,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
                 <div style="grid-column: 1 / -1;"><button type="submit" class="btn btn-primary" style="width:100%;">Yorumu Yayınla</button></div>
             </form>
         </div>
-
         <div class="card-panel">
             <table><thead><tr><th>Müşteri</th><th>Puan</th><th>Yorum</th><th>İşlem</th></tr></thead><tbody id="review-table-body"></tbody></table>
         </div>
@@ -563,28 +363,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
     </div>
 </div>
 
-
 <script>
-    // --- SABİT HİZMET FİYATLARI (TEK KAYNAK) ---
-    const SERVICE_CATALOG = {
-        'sac-kesim': 800,
-        'sakal-tras': 400,
-        'sac-sakal': 1000,
-        'cocuk': 500,
-        'fon': 200,
-        'sac-duzlestirme': 1500,
-        'sac-botoksu': 400,
-        'agda': 150,
-        'kas-tasarimi': 300,
-        'cilt-bakim': 400 // Varsayılan eklendi
-    };
-
-    const SERVICE_NAMES = {
-        'sac-kesim': 'Saç Kesimi', 'sakal-tras': 'Sakal Tıraşı', 'sac-sakal': 'Saç & Sakal', 
-        'cocuk': 'Çocuk Tıraşı', 'fon': 'Fön', 'sac-duzlestirme': 'Saç Düzleştirme',
-        'sac-botoksu': 'Saç Botoksu', 'agda': 'Ağda', 'kas-tasarimi': 'Kaş Tasarımı', 'cilt-bakim': 'Cilt Bakımı'
-    };
-
     // --- TEMEL ---
     if (!localStorage.getItem('isAdminLoggedIn')) window.location.href = 'admin-login.html';
     
@@ -593,12 +372,10 @@ tr:hover td { background: rgba(255,255,255,0.02); }
     
     // --- BAŞLANGIÇ ---
     document.addEventListener('DOMContentLoaded', () => {
-        // Tarihi Göster
         const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
         document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('tr-TR', options);
         
-        // Ay Seçiciyi Bugüne Ayarla
-        // Ay Seçiciyi Bugüne Ayarla (Yerel Saat ile)
+        // Yerel Saat ile Ay Ayarla
         const now = new Date();
         const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
         document.getElementById('reportMonth').value = currentMonthStr;
@@ -612,24 +389,39 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         renderReviews();
     });
 
-    // --- MENÜ GEÇİŞİ ---
+    // --- MENÜ GEÇİŞİ VE HAMBURGER ---
     function showSection(id) {
         document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        // Eğer menüdeki bir butona tıklandıysa, onu aktif yap (sidebar'daki)
+        // Burada basitçe event.target üzerinden class eklemiyoruz çünkü toggleSidebar çalışacak
         
         // Verileri Tazele
         if(id === 'dashboard') updateDashboard();
         if(id === 'appointments') renderAppointments();
         if(id === 'reports') renderReports();
+        if(id === 'calendar') renderMatrix();
         if(id === 'employees') renderEmployees();
         if(id === 'products') renderProducts();
         if(id === 'reviews') renderReviews();
-        if(id === 'appointments') renderAppointments();
-        if(id === 'reports') renderReports();
-        if(id === 'calendar') renderMatrix(); // 👈 YENİ: Takvim sekmesine basınca matrisi çiz
-        //
+    }
+
+    // MOBİL MENÜYÜ AÇ/KAPA
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if(sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        } else {
+            // Sadece mobilde çalışsın (768px altı)
+            if(window.innerWidth <= 768) {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+            }
+        }
     }
 
     // --- 1. DASHBOARD ---
@@ -639,8 +431,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         const prods = getData('productData');
         const accounting = getData('accountingRecords');
 
-        // Bu ayın cirosu
-        const currentMonth = new Date().toISOString().slice(0, 7); // "2025-12"
+        const currentMonth = new Date().toISOString().slice(0, 7);
         const monthlyRevenue = accounting
             .filter(rec => rec.completedAt && rec.completedAt.startsWith(currentMonth))
             .reduce((sum, rec) => sum + (rec.price || 0), 0);
@@ -683,7 +474,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
     function inspectAppt(id) {
         const list = getData('appointments');
-        const item = list.find(x => x.id == id);
+        const item = list.find(x => x.id == id); // == değil === olsa daha iyi ama id string/number karışabilir
         if(!item) return;
 
         const html = `
@@ -704,7 +495,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         
         let appts = getData('appointments');
         const index = appts.findIndex(x => x.id == id);
-        if(index === -1) return;
+        if(index === -1) { alert("Randevu bulunamadı."); return; }
 
         const completed = appts[index];
         const accounting = getData('accountingRecords');
@@ -720,7 +511,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         
         renderAppointments();
         updateDashboard();
-        // alert("İşlem tamamlandı, kasaya işlendi.");
     }
 
     function cancelAppt(id) {
@@ -769,6 +559,72 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         });
     }
 
+    // --- 7. TAKVİM MATRİSİ ---
+    function renderMatrix() {
+        const dateInput = document.getElementById('matrixDate');
+        if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+        
+        const selectedDate = dateInput.value;
+        const team = getData('teamData');
+        const appointments = getData('appointments');
+        const thead = document.getElementById('matrixHead');
+        const tbody = document.getElementById('matrixBody');
+
+        let headHtml = '<tr><th>Saat</th>';
+        team.forEach(emp => { headHtml += `<th>${emp.name}</th>`; });
+        headHtml += '</tr>';
+        thead.innerHTML = headHtml;
+
+        tbody.innerHTML = '';
+        const startHour = 10;
+        const endHour = 22;
+
+        for (let h = startHour; h < endHour; h++) {
+            ['00', '30'].forEach(m => {
+                const timeStr = `${h}:${m}`;
+                let rowHtml = `<tr><td style="text-align:center; font-weight:bold; color:#666;">${timeStr}</td>`;
+
+                team.forEach(emp => {
+                    const isBusy = appointments.find(app => 
+                        app.date === selectedDate && app.staff === emp.name && app.time === timeStr
+                    );
+
+                    if (isBusy) {
+                        rowHtml += `<td><div class="slot-btn slot-busy"><span class="slot-status">DOLU</span><span class="slot-time">${isBusy.customer.substring(0,8)}..</span></div></td>`;
+                    } else {
+                        rowHtml += `<td><button class="slot-btn slot-empty" onclick="quickBook('${selectedDate}', '${timeStr}', '${emp.name}')"><span class="slot-status">BOŞ</span><span class="slot-time">Ekle +</span></button></td>`;
+                    }
+                });
+                rowHtml += '</tr>';
+                tbody.innerHTML += rowHtml;
+            });
+        }
+    }
+
+    function quickBook(date, time, staffName) {
+        const customerName = prompt(`📞 TELEFON RANDEVUSU\n\nPersonel: ${staffName}\nZaman: ${date} ${time}\n\nMüşteri Adı:`);
+        if (customerName) {
+            const newAppt = {
+                id: Date.now(),
+                staff: staffName,
+                service: "Telefon Randevusu",
+                price: 0, 
+                duration: 60,
+                date: date,
+                time: time,
+                customer: customerName + " (Tel)",
+                phone: "-",
+                note: "Manuel Eklendi",
+                status: 'Bekliyor'
+            };
+            const list = getData('appointments');
+            list.push(newAppt);
+            saveData('appointments', list);
+            renderMatrix();
+            alert("Randevu eklendi!");
+        }
+    }
+
     // --- 4. ÇALIŞANLAR ---
     function renderEmployees() {
         const list = getData('teamData');
@@ -790,14 +646,12 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         });
     }
 
-    // Çalışan Ekleme
     document.getElementById('employeeForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        
         const selectedServices = [];
         document.querySelectorAll('input[name="services"]:checked').forEach(cb => selectedServices.push(cb.value));
         
-        if(selectedServices.length === 0) { alert("En az bir hizmet seçmelisin dedem."); return; }
+        if(selectedServices.length === 0) { alert("Hizmet seçmelisin."); return; }
 
         const newEmp = {
             id: document.getElementById('empName').value.toLowerCase().replace(/\s/g, ''),
@@ -811,60 +665,37 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         const list = getData('teamData');
         list.push(newEmp);
         saveData('teamData', list);
-        
         renderEmployees();
-        updateDashboard(); // Aktif personel sayısını güncelle
+        updateDashboard();
         e.target.reset();
         alert("Çalışan başarıyla eklendi!");
     });
 
-    // Çalışan Detay Modalı (O AYKİ PERFORMANS)
     function openEmpProfile(index) {
         const emp = getData('teamData')[index];
         const accounting = getData('accountingRecords');
         const currentMonth = new Date().toISOString().slice(0, 7);
-        
-        // Bu personelin bu ayki işleri
         const jobs = accounting.filter(rec => rec.staff === emp.name && rec.completedAt.startsWith(currentMonth));
         const totalEarnings = jobs.reduce((sum, rec) => sum + (rec.price || 0), 0);
 
-        let jobsHtml = '';
-        if(jobs.length === 0) {
-            jobsHtml = '<p style="color:#666; font-style:italic;">Bu ay henüz tamamlanmış randevusu yok.</p>';
-        } else {
-            jobsHtml = '<ul style="list-style:none; padding:0;">';
-            jobs.forEach(job => {
-                jobsHtml += `<li style="padding:8px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between; font-size:13px;">
-                    <span>${job.date} - ${job.service}</span>
-                    <span style="color:var(--success)">${job.price} ₺</span>
-                </li>`;
-            });
-            jobsHtml += '</ul>';
-        }
+        let jobsHtml = jobs.length === 0 ? '<p style="color:#666;">İşlem yok.</p>' : '<ul style="list-style:none; padding:0;">';
+        jobs.forEach(job => {
+            jobsHtml += `<li style="padding:5px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between; font-size:12px;"><span>${job.date}</span><span style="color:var(--success)">${job.price} ₺</span></li>`;
+        });
+        if(jobs.length > 0) jobsHtml += '</ul>';
 
         const html = `
             <div style="text-align:center; margin-bottom:20px;">
-                <img src="${emp.img}" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--gold); object-fit:cover;">
-                <h2 style="margin:10px 0 5px 0; color:var(--text-main);">${emp.name}</h2>
-                <p style="color:var(--text-muted); margin:0;">${emp.role}</p>
+                <img src="${emp.img}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--gold);">
+                <h3 style="margin:5px 0; color:#fff;">${emp.name}</h3>
+                <p style="color:#888;">${emp.role}</p>
             </div>
-            
-            <div style="background:#2a2a2a; padding:15px; border-radius:8px; margin-bottom:20px;">
-                <h4 style="margin:0 0 10px 0; color:var(--gold); border-bottom:1px solid #444; padding-bottom:5px;">Bu Ayki Performans</h4>
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span>Tamamlanan İş:</span> <strong>${jobs.length}</strong>
-                </div>
-                <div style="display:flex; justify-content:space-between;">
-                    <span>Kazanılan:</span> <strong style="color:var(--gold); font-size:18px;">${formatMoney(totalEarnings)}</strong>
-                </div>
-            </div>
-
             <div style="background:#2a2a2a; padding:15px; border-radius:8px;">
-                <h4 style="margin:0 0 10px 0; color:#fff; border-bottom:1px solid #444; padding-bottom:5px;">İşlem Geçmişi (${currentMonth})</h4>
-                <div style="max-height:200px; overflow-y:auto;">${jobsHtml}</div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Bu Ay İşlem:</span> <strong>${jobs.length}</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Bu Ay Kazanç:</span> <strong style="color:var(--gold);">${formatMoney(totalEarnings)}</strong></div>
             </div>
+            <div style="margin-top:15px; max-height:150px; overflow-y:auto;">${jobsHtml}</div>
         `;
-        
         document.getElementById('empModalContent').innerHTML = html;
         document.getElementById('modalEmp').classList.add('active');
     }
@@ -874,34 +705,23 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         const list = getData('productData');
         const tbody = document.getElementById('prod-table-body');
         tbody.innerHTML = '';
-        
         list.forEach((prod, index) => {
             const isChecked = prod.isFeatured ? 'checked' : '';
-            // Vitrin seçimi için radyo buton
             tbody.innerHTML += `
                 <tr>
-                    <td style="text-align:center;">
-                        <input type="radio" name="featProd" ${isChecked} onchange="setFeaturedProd(${index})" style="accent-color:var(--gold); cursor:pointer;">
-                    </td>
-                    <td class="user-cell">
-                        <img src="${prod.img}" class="user-avatar" onerror="this.src='https://placehold.co/100'">
-                        ${prod.name}
-                    </td>
+                    <td style="text-align:center;"><input type="radio" name="featProd" ${isChecked} onchange="setFeaturedProd(${index})" style="accent-color:var(--gold);"></td>
+                    <td class="user-cell"><img src="${prod.img}" class="user-avatar" onerror="this.src='https://placehold.co/100'"> ${prod.name}</td>
                     <td>${prod.price} ₺</td>
                     <td><button class="btn-icon btn-trash" onclick="deleteItem('productData', ${index})"><i class="fas fa-trash"></i></button></td>
-                </tr>
-            `;
+                </tr>`;
         });
     }
-
     function setFeaturedProd(idx) {
         const list = getData('productData');
         list.forEach(p => p.isFeatured = false);
         list[idx].isFeatured = true;
         saveData('productData', list);
-        // alert("Vitrin ürünü güncellendi."); // Opsiyonel
     }
-
     document.getElementById('productForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const list = getData('productData');
@@ -912,7 +732,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
             desc: document.getElementById('prodDesc').value,
             isFeatured: false
         });
-        if(list.length === 1) list[0].isFeatured = true; // İlk ürünse vitrin yap
+        if(list.length === 1) list[0].isFeatured = true;
         saveData('productData', list);
         renderProducts();
         updateDashboard();
@@ -926,20 +746,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         const tbody = document.getElementById('review-table-body');
         tbody.innerHTML = '';
         list.forEach((rev, index) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>
-                        <div style="font-weight:bold;">${rev.name}</div>
-                        <div style="font-size:11px; color:#888;">${rev.type}</div>
-                    </td>
-                    <td style="color:var(--gold);">${'★'.repeat(rev.rating)}</td>
-                    <td style="font-size:12px; font-style:italic;">"${rev.comment}"</td>
-                    <td><button class="btn-icon btn-trash" onclick="deleteItem('siteReviews', ${index})"><i class="fas fa-trash"></i></button></td>
-                </tr>
-            `;
+            tbody.innerHTML += `<tr><td><div style="font-weight:bold;">${rev.name}</div><div style="font-size:11px; color:#888;">${rev.type}</div></td><td style="color:var(--gold);">${'★'.repeat(rev.rating)}</td><td style="font-size:12px;">"${rev.comment}"</td><td><button class="btn-icon btn-trash" onclick="deleteItem('siteReviews', ${index})"><i class="fas fa-trash"></i></button></td></tr>`;
         });
     }
-
     document.getElementById('reviewForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const list = getData('siteReviews');
@@ -955,13 +764,12 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         alert("Yorum yayınlandı!");
     });
 
-    // --- ORTAK & YARDIMCI ---
+    // --- ORTAK ---
     function deleteItem(key, index) {
         if(confirm("Silmek istediğine emin misin?")) {
             const list = getData(key);
             list.splice(index, 1);
             saveData(key, list);
-            // İlgili sekmeyi yenile
             if(key === 'teamData') renderEmployees();
             if(key === 'productData') renderProducts();
             if(key === 'siteReviews') renderReviews();
@@ -969,126 +777,18 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         }
     }
 
-    function formatMoney(amount) {
-        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₺";
-    }
-
+    function formatMoney(amount) { return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₺"; }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-    // Modal dışı tıklama
-    window.onclick = function(e) {
-        if(e.target.classList.contains('modal-overlay')) {
-            e.target.classList.remove('active');
-        }
-    }
-
-    function logout() {
-        localStorage.removeItem('isAdminLoggedIn');
-        window.location.href = 'admin-login.html';
-    }
-
-    // --- SİSTEMİ SIFIRLA ---
+    window.onclick = function(e) { if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('active'); }
+    function logout() { localStorage.removeItem('isAdminLoggedIn'); window.location.href = 'admin-login.html'; }
+    
+    // SİSTEMİ SIFIRLA
     function resetSystem() {
-        if(confirm('⚠️ DİKKAT: Tüm veriler (Randevular, Çalışanlar, Ciro, Ürünler) KALICI OLARAK silinecek!\n\nSistemi fabrika ayarlarına döndürmek istediğine emin misin?')) {
+        if(confirm('⚠️ DİKKAT: Tüm veriler (Randevular, Çalışanlar, Ciro, Ürünler) SİLİNECEK! Fabrika ayarlarına dönülsün mü?')) {
             localStorage.clear();
             localStorage.setItem('isAdminLoggedIn', 'true');
             alert('Sistem sıfırlandı. Sayfa yenileniyor...');
             location.reload();
-        }
-    }
-    
-    // --- 7. TAKVİM MATRİSİ (TELEFON RANDEVUSU) ---
-    
-    function renderMatrix() {
-        const dateInput = document.getElementById('matrixDate');
-        if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0]; // Bugün seçili gelsin
-        
-        const selectedDate = dateInput.value;
-        const team = getData('teamData');
-        const appointments = getData('appointments');
-        const thead = document.getElementById('matrixHead');
-        const tbody = document.getElementById('matrixBody');
-
-        // 1. Başlıkları (Personel İsimleri) Oluştur
-        let headHtml = '<tr><th>Saat</th>';
-        team.forEach(emp => {
-            headHtml += `<th>${emp.name}</th>`;
-        });
-        headHtml += '</tr>';
-        thead.innerHTML = headHtml;
-
-        // 2. Saat Dilimlerini Döngüye Al (10:00 - 22:00)
-        tbody.innerHTML = '';
-        const startHour = 10;
-        const endHour = 22;
-
-        for (let h = startHour; h < endHour; h++) {
-            ['00', '30'].forEach(m => {
-                const timeStr = `${h}:${m}`;
-                let rowHtml = `<tr><td style="text-align:center; font-weight:bold; color:#666;">${timeStr}</td>`;
-
-                // Her personel için o saati kontrol et
-                team.forEach(emp => {
-                    // Bu saatte bu personelin randevusu var mı?
-                    // NOT: 1 Saatlik bloklama mantığı burada da geçerli olsun mu? 
-                    // Basitlik adına direkt çakışma var mı ona bakıyoruz.
-                    const isBusy = appointments.find(app => 
-                        app.date === selectedDate && 
-                        app.staff === emp.name && 
-                        app.time === timeStr
-                    );
-
-                    if (isBusy) {
-                        // DOLU KUTU
-                        rowHtml += `
-                            <td>
-                                <div class="slot-btn slot-busy" title="${isBusy.customer} (${isBusy.service})">
-                                    <span class="slot-status">DOLU</span>
-                                    <span class="slot-time" style="font-size:9px;">${isBusy.customer.substring(0,8)}..</span>
-                                </div>
-                            </td>`;
-                    } else {
-                        // BOŞ KUTU (Tıklayınca Randevu Al)
-                        rowHtml += `
-                            <td>
-                                <button class="slot-btn slot-empty" onclick="quickBook('${selectedDate}', '${timeStr}', '${emp.name}')">
-                                    <span class="slot-status">BOŞ</span>
-                                    <span class="slot-time">Ekle +</span>
-                                </button>
-                            </td>`;
-                    }
-                });
-
-                rowHtml += '</tr>';
-                tbody.innerHTML += rowHtml;
-            });
-        }
-    }
-
-    // TELEFONLA HIZLI RANDEVU EKLEME
-    function quickBook(date, time, staffName) {
-        const customerName = prompt(`📞 TELEFON RANDEVUSU\n\nPersonel: ${staffName}\nTarih: ${date} Saat: ${time}\n\nMüşterinin Adı Soyadı:`);
-
-        if (customerName) {
-            const newAppt = {
-                id: Date.now(),
-                staff: staffName,
-                service: "Telefon Randevusu", // Varsayılan hizmet
-                price: 0, // Telefonda fiyat belli olmayabilir, 0 girilir, işlem bitince düzeltilir
-                duration: 60, // Telefonda standart 1 saat kapatalım
-                date: date,
-                time: time,
-                customer: customerName + " (Tel)",
-                phone: "-",
-                note: "Dükkandan manuel eklendi",
-                status: 'Bekliyor'
-            };
-
-            const list = getData('appointments');
-            list.push(newAppt);
-            saveData('appointments', list);
-            
-            renderMatrix(); // Tabloyu yenile
-            alert("✅ Randevu başarıyla kapatıldı!");
         }
     }
 
