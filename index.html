@@ -2,20 +2,19 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eren Kozan | Premium Barbershop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>Eren Kozan | Premium Barbershop</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-/* --- 1. TEMEL AYARLAR VE RENK PALETİ --- */
+/* --- 1. TEMEL AYARLAR --- */
 :root {
-    --creme-bg: #f9f7f2; /* Dükkanın sıcak duvar rengi */
-    --gold-accent: #c5a059; /* Avize ve detaylardaki altın */
-    --dark-text: #1a1a1a; /* Modern, okunabilir antrasit */
-    --hero-bg: #111; /* Hero bölümü için koyu zemin */
+    --creme-bg: #f9f7f2;
+    --gold-accent: #c5a059;
+    --dark-text: #1a1a1a;
+    --hero-bg: #111;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,145 +24,164 @@ body {
     background: var(--creme-bg);
     color: var(--dark-text);
     line-height: 1.6;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Yatay taşmayı engelle */
 }
 
-/* --- 2. NAV BAR (SABİT ÜST MENÜ) --- */
+/* --- 2. NAV BAR (RESPONSIVE) --- */
 nav {
     position: fixed; top: 0; width: 100%;
-    background: transparent; color: var(--creme-bg); padding: 15px 25px;
+    background: transparent; padding: 15px 20px;
     display: flex; justify-content: space-between; align-items: center;
-    z-index: 999; transition: background 0.3s ease, box-shadow 0.3s ease; 
+    z-index: 1000; transition: all 0.3s ease;
 }
 
-nav .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: all 0.3s ease; }
-nav .logo-container:hover { transform: scale(1.05); }
-.logo-img { height: 40px; width: auto; filter: drop-shadow(0 0 5px rgba(197, 160, 89, 0.8)); }
-.logo-text { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 0 6px rgba(197, 160, 89, 0.9); text-decoration: none; }
+nav.scrolled { background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
 
-nav .nav-links { margin-right: 50px; display: flex; align-items: center; gap: 20px; }
-nav .nav-links a {
-    font-family: 'Inter', sans-serif; font-weight: 700; color: #fff; padding: 6px 14px;
-    border-radius: 8px; text-decoration: none; text-transform: uppercase; position: relative; transition: color 0.3s ease; font-size: 14px;
+.logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; z-index: 1001; }
+.logo-text { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 900; letter-spacing: 2px; color: #fff; text-shadow: 0 0 6px rgba(197, 160, 89, 0.9); }
+
+/* Masaüstü Linkleri */
+.nav-links { display: flex; align-items: center; gap: 20px; }
+.nav-links a {
+    font-family: 'Inter', sans-serif; font-weight: 600; color: #fff; padding: 8px 16px;
+    text-decoration: none; text-transform: uppercase; font-size: 13px; position: relative;
+    transition: color 0.3s;
 }
-nav .nav-links a::after {
-    content: ""; display: block; width: 0%; height: 2px; background: var(--gold-accent); 
-    position: absolute; bottom: 0; left: 0; transition: width 0.3s ease;
+.nav-links a:hover { color: var(--gold-accent); }
+nav.scrolled .nav-links a { color: #ddd; }
+nav.scrolled .nav-links a:hover { color: var(--gold-accent); }
+
+/* HAMBURGER MENU (MOBİL İÇİN) */
+.hamburger { display: none; cursor: pointer; z-index: 1001; }
+.bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: #fff; }
+
+/* Mobil Menü Perdesi */
+.mobile-menu {
+    position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
+    background: #111; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; gap: 30px;
+    transition: 0.4s ease; z-index: 999;
 }
-nav .nav-links a:hover::after { width: 100%; }
-nav .nav-links a:hover { color: var(--gold-accent); }
-
-/* Scroll edilince Navbar */
-nav.scrolled { background: #1a1a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-nav.scrolled .nav-links a { color: var(--gold-accent) !important; }
-nav.scrolled .nav-links a:hover { color: #fff !important; }
-nav.scrolled .logo-text { color: #fff; text-shadow: none; }
-
-@media (max-width: 900px) {
-    nav { flex-direction: column; padding: 15px; background: #1a1a1a; }
-    nav .nav-links { justify-content: center; margin-top: 10px; margin-right: 0; flex-wrap: wrap; }
+.mobile-menu.active { right: 0; }
+.mobile-menu a {
+    font-family: 'Cinzel', serif; font-size: 24px; color: #fff; text-decoration: none;
+    text-transform: uppercase; transition: 0.3s; opacity: 0; transform: translateY(20px);
 }
+.mobile-menu.active a { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+.mobile-menu a:hover { color: var(--gold-accent); letter-spacing: 2px; }
 
-/* --- 3. HERO BÖLÜMÜ (CANVAS VE PARÇACIKLAR) --- */
+/* --- 3. HERO BÖLÜMÜ --- */
 #hero {
     position: relative; width: 100%; height: 100vh; 
     display: flex; justify-content: center; align-items: center; text-align: center;
-    overflow: hidden; background: var(--hero-bg); 
+    background: var(--hero-bg); overflow: hidden;
 }
 #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 .hero-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle, transparent 20%, #000 100%); z-index: 2; pointer-events: none;
+    background: radial-gradient(circle, transparent 10%, #000 90%); z-index: 2; pointer-events: none;
 }
-.hero-content { position: relative; z-index: 3; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.8); max-width: 900px; padding: 30px; }
-.hero-logo-img { width: 280px; height: auto; margin-bottom: 10px; opacity: 0; animation: fadeInScale 1.5s ease-out 0.2s forwards; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
-@media (max-width: 768px) { .hero-logo-img { width: 200px; } }
-.hero-content .tagline-line { display: block; width: 150px; height: 2px; background: var(--gold-accent); margin: 15px auto; opacity: 0; animation: expandLine 1s ease-out 1s forwards; }
-.hero-content .secondary-title { font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 500; letter-spacing: 8px; text-transform: uppercase; margin-top: 15px; color: var(--gold-accent); opacity: 0; animation: fadeIn 1s ease-out 1.5s forwards; }
-.hero-content p { font-size: 20px; font-weight: 300; margin-top: 20px; opacity: 0; animation: fadeIn 1s ease-out 2s forwards; }
+.hero-content { position: relative; z-index: 3; color: #fff; padding: 20px; width: 100%; }
+.hero-logo-img { width: 240px; height: auto; margin-bottom: 10px; animation: fadeIn 1.5s ease-out; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+.secondary-title { font-size: 18px; letter-spacing: 6px; color: var(--gold-accent); margin-top: 10px; text-transform: uppercase; }
 
-@keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-@keyframes expandLine { from { width: 0; opacity: 0; } to { width: 150px; opacity: 1; } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* --- 4. İÇERİK DÜZENİ --- */
+.main-content-wrapper { width: 100%; background-color: var(--creme-bg); overflow: hidden; }
 
-/* --- 4. ANA İÇERİK KAPSAYICISI (DESENLİ ARKA PLAN) --- */
-.main-content-wrapper {
-    width: 100%; background-color: var(--creme-bg);
-    /* Kesintisiz Dikey Çizgiler */
-    background-image: repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(197, 160, 89, 0.05) 79px, rgba(197, 160, 89, 0.05) 80px);
-    background-attachment: fixed; padding-bottom: 50px;
-}
-
-/* BUTONLAR (CTA) */
+/* Butonlar */
 .cta-btn {
-    display: inline-block; margin-top: 30px; padding: 14px 40px; background: var(--gold-accent);
-    color: #fff; font-family: 'Inter', sans-serif; font-weight: 600; text-decoration: none;
-    text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; transition: all 0.3s ease;
+    display: inline-block; padding: 16px 45px; background: var(--gold-accent);
+    color: #fff; font-weight: 600; text-decoration: none; text-transform: uppercase;
+    letter-spacing: 1px; border-radius: 4px; transition: 0.3s; margin-top: 20px;
     box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4);
 }
-.cta-btn:hover { background: #b08d4e; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(197, 160, 89, 0.6); }
+.cta-btn:active { transform: scale(0.98); } /* Mobilde basma hissi */
 
 /* FELSEFE */
-#felsefe { text-align: center; padding: 120px 10% 60px 10%; position: relative; }
+#felsefe { padding: 80px 20px; text-align: center; }
 .philosophy-box {
-    max-width: 800px; margin: 0 auto; padding: 70px 60px 60px 60px; 
-    border: 1px solid var(--gold-accent); border-radius: 4px; background: #fff; 
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05); position: relative; 
-    opacity: 0; transform: translateY(50px); transition: all 1s ease-out;
+    max-width: 800px; margin: 0 auto; padding: 40px 20px; 
+    border: 1px solid var(--gold-accent); background: #fff; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); position: relative;
 }
-.philosophy-box.visible { opacity: 1; transform: translateY(0); }
-.frozen-scissors-container { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 15px; z-index: 10; }
-.frozen-scissors-icon { font-size: 40px; color: var(--gold-accent); transform: rotate(-90deg); filter: drop-shadow(0 4px 6px rgba(197, 160, 89, 0.3)); }
-#felsefe .tagline { font-size: 14px; letter-spacing: 4px; font-weight: 700; color: var(--gold-accent); margin-bottom: 15px; text-transform: uppercase; }
-#felsefe h2 { font-family: 'Playfair Display', serif; font-size: 42px; margin-top: 0; margin-bottom: 25px; color: var(--dark-text); }
-#felsefe .aciklama { font-size: 18px; line-height: 1.8; color: #555; }
+.frozen-scissors-container { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 10px; }
+.frozen-scissors-icon { font-size: 35px; color: var(--gold-accent); transform: rotate(-90deg); }
+#felsefe h2 { font-family: 'Cinzel', serif; font-size: 28px; margin: 20px 0; color: var(--dark-text); }
+#felsefe p { font-size: 16px; color: #666; margin-bottom: 20px; }
 
-/* SCROLL VIDEO */
-#scroll-video { width: 100%; display: flex; justify-content: center; align-items: center; padding: 60px 5%; flex-wrap: wrap; gap: 80px; position: relative; z-index: 5; }
-.video-frame { width: 100%; max-width: 450px; height: 650px; overflow: hidden; border-radius: 200px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); border: 8px solid #fff; background: #000; }
-#scroll-video video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.scroll-text-box {
-    max-width: 500px; padding: 50px; text-align: left; background: #fff; 
-    border: 1px solid var(--gold-accent); border-left: 6px solid var(--gold-accent); 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05); opacity: 0; transform: translateX(30px); transition: all 1s ease-out;
+/* VİDEO BÖLÜMÜ (Mobilde Alt Alta) */
+#scroll-video { 
+    display: flex; flex-direction: column; align-items: center; gap: 40px; 
+    padding: 60px 20px; 
 }
-.scroll-text-box.visible { opacity: 1; transform: translateX(0); }
-.scroll-text-box h2 { font-family: 'Cinzel', serif; font-size: 36px; color: var(--dark-text); margin-bottom: 25px; }
-.scroll-text-box p { font-size: 18px; line-height: 1.8; color: #555; }
-
-/* YORUMLAR */
-#reviews { padding: 80px 10%; text-align: center; }
-.section-title { font-family: 'Cinzel', serif; font-size: 36px; color: var(--dark-text); margin-bottom: 50px; display: inline-block; border-bottom: 2px solid var(--gold-accent); padding-bottom: 10px; }
-.reviews-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-.review-card {
-    background: #fff; padding: 30px; border-radius: 8px; border: 1px solid rgba(197, 160, 89, 0.3);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 350px; text-align: left;
+.video-frame { 
+    width: 100%; max-width: 400px; height: 550px; 
+    border-radius: 150px; border: 5px solid #fff; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden;
 }
-.stars { color: var(--gold-accent); margin-bottom: 15px; font-size: 14px; }
-.review-text { font-style: italic; color: #555; font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
-.review-author { font-weight: 700; color: var(--dark-text); font-family: 'Cinzel', serif; }
-.review-sub { font-size: 12px; color: #999; }
+#scroll-video video { width: 100%; height: 100%; object-fit: cover; }
+.scroll-text-box { 
+    max-width: 100%; padding: 30px; background: #fff; 
+    border-left: 4px solid var(--gold-accent); 
+}
 
-/* LOCATION */
-.location { display: flex; gap: 50px; padding: 60px 10% 120px 10%; justify-content: center; align-items: center; flex-wrap: wrap; }
-.location iframe { width: 100%; max-width: 600px; height: 400px; border-radius: 8px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 4px solid #fff; }
-.location-info { max-width: 400px; text-align: left; background: #fff; padding: 40px; border-radius: 4px; border: 1px solid var(--gold-accent); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
-.location-info h3 { font-family: 'Cinzel', serif; font-size: 28px; color: var(--dark-text); margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid var(--gold-accent); padding-bottom: 10px; display: inline-block; }
+/* GALERİ */
+#gallery { padding: 60px 20px; }
+.gallery-header { text-align: center; margin-bottom: 30px; }
+.section-title { font-family: 'Cinzel', serif; font-size: 32px; color: var(--dark-text); margin-bottom: 15px; }
+.divider { width: 60px; height: 3px; background: var(--gold-accent); margin: 0 auto 15px auto; }
+
+.gallery-grid {
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 250px;
+}
+.gallery-item { position: relative; overflow: hidden; border-radius: 4px; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+.item-large { grid-column: span 2; grid-row: span 2; }
+.item-wide { grid-column: span 2; }
+/* Overlay mobilde hep hafif görünür olsun ki yazı okunsun */
+.gallery-item .overlay {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    display: flex; align-items: flex-end; justify-content: center; padding-bottom: 20px;
+}
+.overlay-text { text-align: center; color: #fff; }
+.overlay-text h3 { font-family: 'Cinzel', serif; font-size: 18px; color: var(--gold-accent); }
+
+/* KONUM */
+.location { padding: 60px 20px; flex-direction: column; gap: 30px; }
+.location iframe { width: 100%; height: 300px; }
+.location-info { width: 100%; padding: 30px; }
 
 /* FOOTER */
-footer { background: #1a1a1a; color: #fff; padding: 60px 10% 20px 10%; border-top: 4px solid var(--gold-accent); }
-.footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; margin-bottom: 40px; }
-.footer-col { flex: 1; min-width: 200px; text-align: left; }
-.footer-col h4 { color: var(--gold-accent); font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 18px; }
-.footer-col p, .footer-col li { color: #ccc; font-size: 14px; line-height: 1.8; list-style: none; margin-bottom: 10px; }
-.footer-col ul { padding: 0; }
-.footer-col a { color: #ccc; text-decoration: none; transition: color 0.3s; }
-.footer-col a:hover { color: var(--gold-accent); }
-.social-links a { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; margin-right: 10px; color: #fff; transition: all 0.3s; }
-.social-links a:hover { background: var(--gold-accent); border-color: var(--gold-accent); }
-.footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 13px; color: #666; }
-.admin-access-link { color: #444; text-decoration: none; margin-top: 10px; display: inline-block; }
-.admin-access-link:hover { color: var(--gold-accent); }
+footer { background: #1a1a1a; color: #fff; padding: 50px 20px 20px 20px; border-top: 3px solid var(--gold-accent); }
+.footer-container { display: flex; flex-direction: column; gap: 30px; text-align: center; }
+.footer-col h4 { color: var(--gold-accent); margin-bottom: 15px; font-size: 18px; }
+.social-links { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+
+/* --- 📱 MOBİL MEDYA SORGULARI (RESPONSIVE) --- */
+@media (max-width: 900px) {
+    /* Menü Değişimi */
+    .nav-links { display: none; } /* Masaüstü menüyü gizle */
+    .hamburger { display: block; } /* Hamburgeri göster */
+    
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
+}
+
+@media (max-width: 600px) {
+    .logo-text { font-size: 20px; }
+    .hero-logo-img { width: 180px; }
+    .secondary-title { font-size: 14px; letter-spacing: 3px; }
+    
+    .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
+    .item-large, .item-wide { grid-column: span 1; grid-row: span 1; }
+    
+    .philosophy-box { padding: 30px 15px; }
+    #felsefe h2 { font-size: 24px; }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
 </head>
 
@@ -173,22 +191,38 @@ footer { background: #1a1a1a; color: #fff; padding: 60px 10% 20px 10%; border-to
     <a href="index.html" class="logo-container">
         <span class="logo-text">EREN KOZAN</span>
     </a>
+
     <div class="nav-links">
         <a href="employees.html">Çalışanlar</a>
         <a href="products.html">Ürünler</a>
+        <a href="#gallery">Galeri</a>
         <a href="#location">Konum</a>
         <a href="appointment.html">Randevu</a>
     </div>
+
+    <div class="hamburger" onclick="toggleMenu()">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="employees.html" onclick="toggleMenu()">Çalışanlar</a>
+    <a href="products.html" onclick="toggleMenu()">Ürünler</a>
+    <a href="#gallery" onclick="toggleMenu()">Galeri</a>
+    <a href="#location" onclick="toggleMenu()">Konum</a>
+    <a href="appointment.html" onclick="toggleMenu()" style="color:var(--gold-accent);">Randevu Al</a>
+</div>
 
 <section id="hero">
     <canvas id="hero-canvas"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <img src="./erenkozanlogo_white.png" alt="Eren Kozan" class="hero-logo-img">
-        <span class="tagline-line"></span> 
+        <img src="img/erenkozanlogo_white.png" alt="Eren Kozan" class="hero-logo-img">
         <div class="secondary-title">PREMIUM CUT</div> 
-        <p>Kafama Göre Değil, Kafana Göre!</p>
+        <p style="margin-top:15px; opacity:0.8;">Kafama Göre Değil, Kafana Göre!</p>
+        <a href="appointment.html" class="cta-btn" style="background:transparent; border:1px solid var(--gold-accent); margin-top:30px;">Randevu Al</a>
     </div>
 </section>
 
@@ -196,170 +230,154 @@ footer { background: #1a1a1a; color: #fff; padding: 60px 10% 20px 10%; border-to
 
     <section id="felsefe">
         <div class="philosophy-box scroll-animate">
-            <div class="frozen-scissors-container">
-                <i class="fas fa-scissors frozen-scissors-icon"></i>
-            </div>
-            <p class="tagline">DENEYİM. ZANAAT. MÜKEMMELLİYET.</p>
-            <h2>Tarzınız Bizim İmzamızdır.</h2>
-            <p class="aciklama">Her ziyaret, geleneksel berber sanatının modern yaklaşımla harmanlandığı, size özel tasarlanmış bir ritüeldir. Biz sadece kesmiyoruz, karakter yaratıyoruz.</p>
-            <a href="appointment.html" class="cta-btn">Randevu Oluştur</a>
+            <div class="frozen-scissors-container"><i class="fas fa-scissors frozen-scissors-icon"></i></div>
+            <p style="color:var(--gold-accent); font-weight:700; letter-spacing:2px; font-size:12px;">DENEYİM & ZANAAT</p>
+            <h2>Tarzınız İmzamızdır.</h2>
+            <p>Her ziyaret, geleneksel berber sanatının modern yaklaşımla harmanlandığı, size özel bir ritüeldir.</p>
+            <a href="appointment.html" class="cta-btn">Hemen Yerini Ayırt</a>
         </div>
     </section>
 
     <section id="scroll-video">
         <div class="video-frame">
-            <video id="scroll-controlled" autoplay loop muted playsinline preload="auto">
-                <source src="./erenvideo.mp4" type="video/mp4">
+            <video id="scroll-controlled" autoplay loop muted playsinline poster="img/gallery_1.jpg">
+                <source src="/video/erenvideo.mp4" type="video/mp4">
             </video>
         </div>
         
         <div class="scroll-text-box scroll-animate">
-            <h2>Premium Saç Kesimi</h2>
-            <p>Saçınızın genetik yapısı ile kafa anatominize göre yaptığımız saç kesimlerimiz ile sizlere premium hizmet sağlıyoruz. Yüksek kaliteli ürünler ve deneyimli ekibimizle tarzınızı ortaya çıkarıyoruz.</p>
-            <a href="products.html" class="cta-btn">Ürünlerimizi İncele</a>
+            <h2 style="font-family:'Cinzel', serif; color:var(--dark-text);">Premium Deneyim</h2>
+            <p style="color:#555; margin-bottom:20px;">Saç anatomisi ve yüz hattınıza uygun kesim teknikleri ile size en yakışan tarzı ortaya çıkarıyoruz.</p>
+            <a href="products.html" style="color:var(--gold-accent); font-weight:700; text-decoration:none;">Ürünleri İncele →</a>
         </div>
     </section>
 
-    <section id="reviews">
-        <h2 class="section-title">Misafirlerimiz Ne Diyor?</h2>
-        <div class="reviews-grid" id="reviews-container">
-            <p style="color:#888;">Yorumlar yükleniyor...</p>
+    <section id="gallery">
+        <div class="gallery-header scroll-animate">
+            <span style="color:var(--gold-accent); font-weight:700; letter-spacing:2px;">ATMOSFER</span>
+            <h2 class="section-title">MEKANIMIZ</h2>
+            <div class="divider"></div>
+        </div>
+
+        <div class="gallery-grid scroll-animate">
+            <div class="gallery-item item-large">
+                <img src="img/gallery_1.jpg" onerror="this.src='https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop'" alt="Salon">
+                <div class="overlay"><div class="overlay-text"><h3>VIP Lounge</h3></div></div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="img/gallery_2.jpg" onerror="this.src='https://images.unsplash.com/photo-1503951914875-452162b7f304?q=80&w=2070&auto=format&fit=crop'" alt="Ekipman">
+            </div>
+
+            <div class="gallery-item">
+                <img src="img/gallery_3.jpg" onerror="this.src='https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070&auto=format&fit=crop'" alt="Bekleme">
+            </div>
+
+            <div class="gallery-item item-wide">
+                <img src="img/gallery_4.jpg" onerror="this.src='https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=2070&auto=format&fit=crop'" alt="Ustalık">
+                <div class="overlay"><div class="overlay-text"><h3>Ustalık</h3></div></div>
+            </div>
         </div>
     </section>
 
     <section class="location" id="location">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3049.204558066551!2d28.9897103761895!3d40.16542718306389!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1405021200155b5f%3A0x6a0c0e7b9b1d7b0!2sU%C4%9Fur%20Mumcu%20Blv.!5e0!3m2!1str!2str!4v1709292850980!5m2!1str!2str" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3049.204558066551!2d28.9897103761895!3d40.16542718306389!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1405021200155b5f%3A0x6a0c0e7b9b1d7b0!2sU%C4%9Fur%20Mumcu%20Blv.!5e0!3m2!1str!2str!4v1709292850980!5m2!1str!2str" allowfullscreen="" loading="lazy"></iframe>
         <div class="location-info">
-            <h3>Konumumuz</h3>
-            <p><strong>Adres:</strong> Altınşehir Mh, Uğur Mumcu Blv. Taşyakan Sitesi D:76 E, 16120, 16230 Ni̇lüfer/Bursa</p>
-            <p style="margin-top:10px;"><strong>Telefon:</strong> 0 545 445 37 57</p>
+            <h3 style="font-family:'Cinzel', serif; margin-bottom:15px;">İletişim</h3>
+            <p><strong>Adres:</strong> Altınşehir Mh, Uğur Mumcu Blv. Taşyakan Sitesi D:76 E, Nilüfer/Bursa</p>
+            <p style="margin-top:10px;"><strong>Telefon:</strong> <a href="tel:05454453757" style="color:var(--gold-accent);">0 545 445 37 57</a></p>
+            <a href="https://maps.google.com" target="_blank" class="cta-btn" style="margin-top:20px; display:inline-block; font-size:12px; padding:10px 20px;">Yol Tarifi Al</a>
         </div>
     </section>
 
 </div> 
+
 <footer>
     <div class="footer-container">
         <div class="footer-col">
             <h4>EREN KOZAN</h4>
-            <p>Bursa'nın en prestijli erkek bakım merkezi. Geleneksel zanaatı modern dokunuşlarla sunuyoruz.</p>
+            <p>Bursa'nın en prestijli erkek bakım merkezi.</p>
             <div class="social-links">
                 <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
                 <a href="#"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
-        <div class="footer-col">
-            <h4>Hızlı Erişim</h4>
-            <ul>
-                <li><a href="index.html">Ana Sayfa</a></li>
-                <li><a href="employees.html">Ekibimiz</a></li>
-                <li><a href="products.html">Ürünler</a></li>
-                <li><a href="appointment.html">Randevu Al</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>Çalışma Saatleri</h4>
-            <ul>
-                <li>Pazartesi - Cmt: 10:00 - 22:00</li>
-                <li>Pazar: Kapalı</li>
-            </ul>
-            <p style="margin-top:15px; color:var(--gold-accent);">Randevulu Hizmet</p>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>© 2025 Eren Kozan — Tüm Hakları Saklıdır</p>
-        <div class="admin-link-container">
-            <a href="admin-login.html" class="admin-access-link"><i class="fas fa-lock"></i> Yönetici Girişi</a>
+        <div class="footer-bottom" style="margin-top:30px; border-top:1px solid #333; padding-top:20px;">
+            <p>© 2025 Eren Kozan</p>
+            <a href="admin-login.html" style="color:#444; text-decoration:none; font-size:12px; margin-top:10px; display:block;">Yönetici Girişi</a>
         </div>
     </div>
 </footer>
 
 <script>
-// 1. NAVBAR SCROLL
+// --- 1. MOBİL MENÜ MANTIĞI ---
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.querySelector('.hamburger');
+    menu.classList.toggle('active');
+    
+    // Hamburger animasyonu (X şekline dönmesi için CSS eklenebilir ama şimdilik basit kalsın)
+    // Menü açıldığında scroll'u kitlemek istersen:
+    // document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+}
+
+// --- 2. NAVBAR SCROLL EFEKTİ ---
 const nav = document.querySelector('nav');
-const scrollThreshold = 700; 
-function changeNavColor() {
-    if (window.scrollY >= scrollThreshold) nav.classList.add('scrolled'); 
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) nav.classList.add('scrolled');
     else nav.classList.remove('scrolled');
-}
-window.addEventListener('scroll', changeNavColor);
-window.addEventListener('load', changeNavColor);
-
-// 2. SCROLL ANIMASYON
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-}, { threshold: 0.2 });
-document.querySelectorAll('.scroll-animate').forEach((el) => { observer.observe(el); });
-
-// --- 3. YORUMLARI DOLDUR (ADMIN PANELİNDEN ÇEKME) ---
-function renderReviews() {
-    const container = document.getElementById('reviews-container');
-    container.innerHTML = ''; 
-
-    // Local Storage'dan 'siteReviews' verisini al (Admin panelinin kaydettiği yer)
-    const reviewsData = JSON.parse(localStorage.getItem('siteReviews')) || [];
-
-    // Eğer yorum yoksa mesaj göster
-    if (reviewsData.length === 0) {
-        container.innerHTML = '<p style="color:#888; font-style:italic;">Henüz yorum eklenmemiş.</p>';
-        return;
-    }
-
-    // Yorumları oluştur
-    reviewsData.forEach(review => {
-        let starsHTML = '';
-        for(let i=0; i<5; i++) {
-            // Yıldız sayısına göre dolu/boş yıldız koy
-            starsHTML += i < review.rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
-        }
-        
-        const card = `
-            <div class="review-card">
-                <div class="stars">${starsHTML}</div>
-                <p class="review-text">"${review.comment}"</p>
-                <div class="review-author">${review.name}</div>
-                <div class="review-sub">${review.type}</div>
-            </div>`;
-        container.innerHTML += card;
-    });
-}
-
-// Sayfa açılınca yorumları yükle
-document.addEventListener('DOMContentLoaded', () => { 
-    renderReviews(); // Artık parametre almıyor, direkt storage'dan çekiyor
 });
-// 4. HERO CANVAS (PARÇACIKLAR)
+
+// --- 3. HERO CANVAS (PERFORMANS OPTİMİZASYONLU) ---
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 let width, height;
 let particles = [];
-const particleCount = 40; 
+// MOBİL PERFORMANS AYARI: Ekran 768px'den küçükse sadece 15 parçacık, değilse 40.
+const particleCount = window.innerWidth < 768 ? 15 : 40; 
 
 function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+
 class Particle {
     constructor() {
-        this.x = Math.random() * width; this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5; 
-        this.size = Math.random() * 3 + 1; this.opacity = Math.random() * 0.5 + 0.1; 
+        this.reset();
+    }
+    reset() {
+        this.x = Math.random() * width; 
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.5; 
+        this.vy = (Math.random() - 0.5) * 0.5; 
+        this.size = Math.random() * 2 + 1; 
+        this.opacity = Math.random() * 0.5 + 0.1; 
     }
     update() {
         this.x += this.vx; this.y += this.vy;
-        if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
-        if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) this.reset();
     }
     draw() {
-        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(197, 160, 89, ${this.opacity})`; ctx.fill();
+        ctx.beginPath(); 
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(197, 160, 89, ${this.opacity})`; 
+        ctx.fill();
     }
 }
+
 function init() { resize(); for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); } animate(); }
 function animate() {
     ctx.clearRect(0, 0, width, height);
     particles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(animate);
 }
-window.addEventListener('resize', resize);
+
+window.addEventListener('resize', () => { resize(); }); // Resize eventini debouncelamak daha iyi olurdu ama şimdilik yeterli.
 init();
+
+// --- 4. SCROLL ANİMASYON ---
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1 }); // Mobilde daha çabuk tetiklensin diye threshold'u düşürdüm
+document.querySelectorAll('.scroll-animate').forEach((el) => { observer.observe(el); });
+
 </script>
 
 </body>
