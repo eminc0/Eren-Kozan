@@ -29,7 +29,7 @@ body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-d
 .btn-reset:hover { background: #f39c12; color: #000; }
 
 /* --- MAIN CONTENT --- */
-.main-content { flex: 1; padding: 30px; overflow-y: auto; position: relative; width: calc(100% - 260px); } /* Masaüstünde genişlik ayarı */
+.main-content { flex: 1; padding: 30px; overflow-y: auto; position: relative; width: calc(100% - 260px); }
 .section { display: none; animation: fadeIn 0.4s ease; }
 .section.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -85,7 +85,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .cb-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #ddd; cursor: pointer; }
 .cb-item input { accent-color: var(--gold); transform: scale(1.2); }
 
-/* CALENDAR MATRIX */
+/* CALENDAR MATRIX (MASAÜSTÜ) */
 .calendar-controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
 .matrix-table { width: 100%; border-collapse: separate; border-spacing: 4px; }
 .matrix-table th { background: #333; color: var(--gold); text-align: center; padding: 10px; border-radius: 4px; }
@@ -96,6 +96,23 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .slot-busy { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); cursor: not-allowed; }
 .slot-time { font-size: 10px; opacity: 0.7; }
 .slot-status { font-size: 13px; }
+
+/* CALENDAR MOBİL (YENİ EKLEME) */
+#mobileCalendarView { display: none; } /* Masaüstünde gizli */
+.mobile-staff-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
+.mobile-staff-card { 
+    min-width: 100px; background: #2a2a2a; border: 1px solid var(--border); 
+    border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; 
+    transition: all 0.2s; opacity: 0.7; 
+}
+.mobile-staff-card.active { border-color: var(--gold); opacity: 1; background: rgba(197, 160, 89, 0.1); }
+.mobile-staff-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
+.mobile-staff-name { font-size: 12px; font-weight: 600; color: #fff; }
+
+.mobile-slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+.mobile-slot { 
+    padding: 15px 5px; border-radius: 6px; text-align: center; font-size: 13px; font-weight: 600; 
+}
 
 /* MODAL */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
@@ -114,7 +131,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 /* SIDEBAR OVERLAY (MOBİL İÇİN) */
 .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; backdrop-filter: blur(3px); }
 
-/* --- 📱 MOBİL UYUMLULUK (HAMBURGER MENÜLÜ) --- */
+/* --- 📱 MOBİL UYUMLULUK (HAMBURGER MENÜLÜ + MOBİL TAKVİM) --- */
 @media screen and (max-width: 768px) {
     /* 1. SIDEBAR'I GİZLE VE STİLİNİ DEĞİŞTİR */
     .sidebar {
@@ -152,7 +169,10 @@ tr:hover td { background: rgba(255,255,255,0.02); }
     .stats-grid { grid-template-columns: 1fr; gap: 15px; }
     .stat-card { padding: 15px; }
     
-    /* 5. TAKVİM KONTROLLERİ VE FORM */
+    /* 5. TAKVİM (ÖNEMLİ DEĞİŞİKLİK) */
+    .matrix-table { display: none; } /* Masaüstü tabloyu gizle */
+    #mobileCalendarView { display: block; } /* Mobil görünümü aç */
+    
     .calendar-controls { flex-direction: column; align-items: stretch; gap: 10px; }
     .calendar-controls input, .calendar-controls button { width: 100% !important; height: 45px; }
     .form-grid { grid-template-columns: 1fr; }
@@ -257,11 +277,19 @@ tr:hover td { background: rgba(255,255,255,0.02); }
             <button class="btn btn-primary" onclick="renderMatrix()"><i class="fas fa-sync"></i> Yenile</button>
             <span style="margin-left:auto; font-size:12px; color:#666;">*Telefondan arayan müşteriyi eklemek için BOŞ kutuya tıkla.</span>
         </div>
+        
         <div class="card-panel" style="overflow-x:auto;">
             <table class="matrix-table">
                 <thead id="matrixHead"></thead>
                 <tbody id="matrixBody"></tbody>
             </table>
+
+            <div id="mobileCalendarView">
+                <div class="mobile-staff-list" id="mobileStaffList"></div>
+                <div class="mobile-slots-grid" id="mobileSlotsGrid">
+                    <p style="color:#666; text-align:center; grid-column:1/-1;">Lütfen bir personel seçiniz.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -375,12 +403,10 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
         document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('tr-TR', options);
         
-        // Yerel Saat ile Ay Ayarla
         const now = new Date();
         const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
         document.getElementById('reportMonth').value = currentMonthStr;
 
-        // İlk Yüklemeler
         updateDashboard();
         renderAppointments();
         renderReports();
@@ -394,10 +420,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-        // Eğer menüdeki bir butona tıklandıysa, onu aktif yap (sidebar'daki)
-        // Burada basitçe event.target üzerinden class eklemiyoruz çünkü toggleSidebar çalışacak
         
-        // Verileri Tazele
         if(id === 'dashboard') updateDashboard();
         if(id === 'appointments') renderAppointments();
         if(id === 'reports') renderReports();
@@ -407,7 +430,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         if(id === 'reviews') renderReviews();
     }
 
-    // MOBİL MENÜYÜ AÇ/KAPA
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
@@ -416,7 +438,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
         } else {
-            // Sadece mobilde çalışsın (768px altı)
             if(window.innerWidth <= 768) {
                 sidebar.classList.add('active');
                 overlay.classList.add('active');
@@ -474,7 +495,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
     function inspectAppt(id) {
         const list = getData('appointments');
-        const item = list.find(x => x.id == id); // == değil === olsa daha iyi ama id string/number karışabilir
+        const item = list.find(x => x.id == id);
         if(!item) return;
 
         const html = `
@@ -495,12 +516,11 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         
         let appts = getData('appointments');
         const index = appts.findIndex(x => x.id == id);
-        if(index === -1) { alert("Randevu bulunamadı."); return; }
+        if(index === -1) return;
 
         const completed = appts[index];
         const accounting = getData('accountingRecords');
         
-        // ID kontrolü (Çift kayıt önleme)
         if(!accounting.some(x => x.id == id)) {
             accounting.push({ ...completed, completedAt: new Date().toISOString() });
             saveData('accountingRecords', accounting);
@@ -525,24 +545,19 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         }
     }
 
-    // --- 3. RAPORLAR (FİNANSAL) ---
+    // --- 3. RAPORLAR ---
     function renderReports() {
-        const selectedMonth = document.getElementById('reportMonth').value; // "YYYY-MM"
+        const selectedMonth = document.getElementById('reportMonth').value;
         const accounting = getData('accountingRecords');
         const team = getData('teamData');
         const tbody = document.getElementById('report-table-body');
         
-        // Filtrele
         const filteredRecords = accounting.filter(rec => rec.completedAt && rec.completedAt.startsWith(selectedMonth));
-        
-        // Toplam Ciro Hesapla
         const totalRevenue = filteredRecords.reduce((sum, rec) => sum + (rec.price || 0), 0);
         document.getElementById('monthly-total-display').innerText = formatMoney(totalRevenue);
 
         tbody.innerHTML = '';
-        
         team.forEach(member => {
-            // Bu personelin o ayki işleri
             const jobs = filteredRecords.filter(rec => rec.staff === member.name);
             const earnings = jobs.reduce((sum, rec) => sum + (rec.price || 0), 0);
             
@@ -559,7 +574,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         });
     }
 
-    // --- 7. TAKVİM MATRİSİ ---
+    // --- 7. TAKVİM (HİBRİT) ---
+    let selectedMobileStaff = null; // Mobilde seçili personeli tutar
+
     function renderMatrix() {
         const dateInput = document.getElementById('matrixDate');
         if (!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
@@ -567,6 +584,8 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         const selectedDate = dateInput.value;
         const team = getData('teamData');
         const appointments = getData('appointments');
+        
+        // --- MASAÜSTÜ İÇİN TABLO OLUŞTURMA ---
         const thead = document.getElementById('matrixHead');
         const tbody = document.getElementById('matrixBody');
 
@@ -590,13 +609,64 @@ tr:hover td { background: rgba(255,255,255,0.02); }
                     );
 
                     if (isBusy) {
-                        rowHtml += `<td><div class="slot-btn slot-busy"><span class="slot-status">DOLU</span><span class="slot-time">${isBusy.customer.substring(0,8)}..</span></div></td>`;
+                        rowHtml += `<td><div class="slot-btn slot-busy" title="${isBusy.customer}"><span class="slot-status">DOLU</span><span class="slot-time" style="font-size:9px;">${isBusy.customer.substring(0,8)}..</span></div></td>`;
                     } else {
                         rowHtml += `<td><button class="slot-btn slot-empty" onclick="quickBook('${selectedDate}', '${timeStr}', '${emp.name}')"><span class="slot-status">BOŞ</span><span class="slot-time">Ekle +</span></button></td>`;
                     }
                 });
                 rowHtml += '</tr>';
                 tbody.innerHTML += rowHtml;
+            });
+        }
+
+        // --- MOBİL İÇİN KART LİSTESİ ---
+        const mobileList = document.getElementById('mobileStaffList');
+        mobileList.innerHTML = '';
+        
+        team.forEach(emp => {
+            const isActive = selectedMobileStaff === emp.name ? 'active' : '';
+            const imgUrl = emp.img || 'https://placehold.co/100';
+            
+            mobileList.innerHTML += `
+                <div class="mobile-staff-card ${isActive}" onclick="selectMobileStaff('${emp.name}')">
+                    <img src="${imgUrl}">
+                    <div class="mobile-staff-name">${emp.name}</div>
+                </div>
+            `;
+        });
+
+        // Eğer mobilde bir personel seçiliyse onun saatlerini göster
+        if(selectedMobileStaff) {
+            renderMobileSlots(selectedMobileStaff, selectedDate, appointments);
+        }
+    }
+
+    // Mobilde personel seçince çalışır
+    function selectMobileStaff(staffName) {
+        selectedMobileStaff = staffName;
+        renderMatrix(); // Yeniden çizerek active sınıfını ve saatleri güncelle
+    }
+
+    // Seçilen personelin saatlerini mobilde göster
+    function renderMobileSlots(staffName, date, appointments) {
+        const grid = document.getElementById('mobileSlotsGrid');
+        grid.innerHTML = '';
+        
+        const startHour = 10;
+        const endHour = 22;
+
+        for (let h = startHour; h < endHour; h++) {
+            ['00', '30'].forEach(m => {
+                const timeStr = `${h}:${m}`;
+                const isBusy = appointments.find(app => 
+                    app.date === date && app.staff === staffName && app.time === timeStr
+                );
+
+                if(isBusy) {
+                    grid.innerHTML += `<div class="mobile-slot slot-busy" style="background:rgba(231,76,60,0.1); color:#e74c3c; border:1px solid #e74c3c;">${timeStr}<br><small>DOLU</small></div>`;
+                } else {
+                    grid.innerHTML += `<div class="mobile-slot slot-empty" onclick="quickBook('${date}', '${timeStr}', '${staffName}')" style="cursor:pointer; background:rgba(39,174,96,0.1); color:#27ae60; border:1px solid #27ae60;">${timeStr}<br><small>BOŞ</small></div>`;
+                }
             });
         }
     }
