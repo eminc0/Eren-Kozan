@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Randevu Oluştur | Eren Kozan</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
@@ -11,45 +11,100 @@
 
 <style>
 /* --- 1. ORTAK PREMIUM STİLLER --- */
-:root { --creme-bg: #f9f7f2; --gold-accent: #c5a059; --dark-text: #1a1a1a; --white: #ffffff; --success: #27ae60; }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', sans-serif; background-color: var(--creme-bg); color: var(--dark-text); line-height: 1.6; overflow-x: hidden; position: relative; }
+:root {
+    --creme-bg: #f9f7f2; 
+    --gold-accent: #c5a059; 
+    --dark-text: #1a1a1a; 
+    --hero-bg: #111;
+    --success: #27ae60;
+}
 
-/* ARKA PLAN */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--creme-bg);
+    color: var(--dark-text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- 2. NAV BAR (SABİT KOYU RENK - DÜZELTİLDİ) --- */
+nav {
+    position: fixed; top: 0; left: 0; width: 100%;
+    padding: 20px 5%; 
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 1000; transition: all 0.4s ease;
+    /* DÜZELTME BURADA: Transparent yerine sabit koyu renk verildi */
+    background: #1a1a1a; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Scrolled class'ı artık sadece padding'i daraltmak için kalsın */
+nav.scrolled { 
+    padding: 15px 5%;
+}
+
+.logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; z-index: 1001; }
+.logo-text { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 0 10px rgba(197, 160, 89, 0.6); }
+
+/* MASAÜSTÜ LİNKLERİ */
+.nav-links { display: flex; align-items: center; gap: 30px; }
+.nav-links a {
+    font-family: 'Inter', sans-serif; font-weight: 500; color: #fff; 
+    text-decoration: none; text-transform: uppercase; font-size: 13px; letter-spacing: 1px;
+    position: relative; transition: color 0.3s; opacity: 0.9;
+}
+.nav-links a::after {
+    content: ''; display: block; width: 0; height: 2px; background: var(--gold-accent);
+    transition: width 0.3s; position: absolute; bottom: -5px; left: 0;
+}
+.nav-links a:hover::after { width: 100%; }
+.nav-links a:hover { color: var(--gold-accent); opacity: 1; }
+.nav-links a.active { color: var(--gold-accent); opacity: 1; font-weight: 700; }
+
+/* HAMBURGER */
+.hamburger { display: none; cursor: pointer; z-index: 1001; padding: 10px; }
+.bar { display: block; width: 28px; height: 2px; margin: 6px 0; background-color: #fff; transition: 0.4s; }
+
+/* MOBİL MENÜ */
+.mobile-menu {
+    position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
+    background: #000; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; gap: 35px;
+    transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 999;
+}
+.mobile-menu.active { right: 0; }
+.mobile-menu a {
+    font-family: 'Cinzel', serif; font-size: 24px; color: #fff; text-decoration: none;
+    text-transform: uppercase; transition: 0.3s; opacity: 0; transform: translateY(20px);
+}
+.mobile-menu.active a { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+.mobile-menu a:hover { color: var(--gold-accent); letter-spacing: 2px; }
+
+/* --- 3. ARKA PLAN --- */
 #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4; pointer-events: none; }
 
-/* NAV BAR */
-nav { position: sticky; top: 0; width: 100%; background: #1a1a1a; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-nav .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: transform 0.3s ease; }
-nav .logo-container:hover { transform: scale(1.05); }
-.logo-img { height: 40px; width: auto; filter: drop-shadow(0 0 5px rgba(197, 160, 89, 0.8)); }
-.logo-text { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 0 0 6px rgba(197, 160, 89, 0.9); }
-nav .nav-links { margin-right: 50px; display: flex; align-items: center; gap: 20px; }
-nav .nav-links a { font-family: 'Inter', sans-serif; font-weight: 700; color: #fff; padding: 6px 14px; border-radius: 8px; text-decoration: none; text-transform: uppercase; position: relative; transition: color 0.3s ease; font-size: 14px; }
-nav .nav-links a::after { content: ""; display: block; width: 0%; height: 2px; background: var(--gold-accent); position: absolute; bottom: 0; left: 0; transition: width 0.3s ease; }
-nav .nav-links a:hover::after { width: 100%; }
-nav .nav-links a:hover { color: var(--gold-accent); }
-nav .nav-links a.active { color: var(--gold-accent); }
-@media (max-width: 900px) { nav { flex-direction: column; padding: 15px; } nav .nav-links { justify-content: center; margin-top: 10px; margin-right: 0; flex-wrap: wrap; } }
+/* --- 4. RANDEVU SİHİRBAZI --- */
+/* Padding-top arttırıldı ki menü altında kalmasın */
+.booking-section { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 140px 20px 100px 20px; position: relative; z-index: 10; }
+.booking-container { width: 100%; max-width: 800px; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 4px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); overflow: hidden; position: relative; backdrop-filter: blur(10px); }
 
-/* RANDEVU SİHİRBAZI */
-.booking-section { min-height: 90vh; display: flex; justify-content: center; align-items: flex-start; padding: 60px 20px 100px 20px; position: relative; z-index: 10; }
-.booking-container { width: 100%; max-width: 800px; background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-accent); border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.08); overflow: hidden; position: relative; backdrop-filter: blur(8px); }
-.booking-header { background: var(--dark-text); padding: 40px 20px; text-align: center; position: relative; overflow: hidden; }
+.booking-header { background: #1a1a1a; padding: 40px 20px; text-align: center; position: relative; overflow: hidden; }
 .booking-header h2 { font-family: 'Cinzel', serif; color: #fff; margin: 0; font-size: 32px; letter-spacing: 2px; position: relative; z-index: 2; }
 .booking-header p { color: var(--gold-accent); margin-top: 10px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; position: relative; z-index: 2; }
 .booking-header::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background-image: repeating-linear-gradient(45deg, rgba(197, 160, 89, 0.1) 0, rgba(197, 160, 89, 0.1) 1px, transparent 1px, transparent 20px); z-index: 1; opacity: 0.3; }
-.progress-bar-container { background: #f4f4f4; height: 6px; width: 100%; position: relative; }
+
+.progress-bar-container { background: #f4f4f4; height: 4px; width: 100%; position: relative; }
 .progress-bar { height: 100%; background: var(--gold-accent); width: 25%; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
 
 /* Steps */
 .step-content { padding: 40px; display: none; animation: fadeIn 0.5s ease; }
 .step-content.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .step-title { font-family: 'Cinzel', serif; font-size: 24px; color: var(--dark-text); margin-bottom: 10px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
 .step-subtitle { display: block; font-size: 14px; color: #666; margin-bottom: 30px; font-style: italic; }
 
-/* ADIM 1: BERBER */
+/* Adım 1: Berber */
 .staff-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
 .staff-radio { display: none; }
 .staff-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 120px; opacity: 0.6; transition: all 0.3s; }
@@ -59,21 +114,21 @@ nav .nav-links a.active { color: var(--gold-accent); }
 .staff-radio:checked + .staff-card { opacity: 1; transform: scale(1.1); }
 .staff-radio:checked + .staff-card .staff-img-box { border-color: var(--gold-accent); box-shadow: 0 0 15px rgba(197, 160, 89, 0.4); }
 
-/* ADIM 2: HİZMET (MULTI) */
-.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+/* Adım 2: Hizmet */
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
 .service-checkbox { display: none; }
-.service-card { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 15px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; text-align: center; height: 100%; position: relative; }
-.service-card i { font-size: 32px; color: #ccc; margin-bottom: 15px; transition: color 0.2s; }
-.service-card h4 { font-size: 16px; font-weight: 600; margin: 0; color: #555; transition: color 0.2s; }
-.service-card .price { font-size: 14px; color: #999; margin-top: 5px; }
+.service-card { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px 15px; background: #fff; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; text-align: center; height: 100%; position: relative; }
+.service-card i { font-size: 28px; color: #ccc; margin-bottom: 10px; transition: color 0.2s; }
+.service-card h4 { font-size: 15px; font-weight: 600; margin: 0; color: #555; transition: color 0.2s; }
+.service-card .price { font-size: 13px; color: #999; margin-top: 5px; }
 .service-card::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 10px; right: 10px; color: var(--success); opacity: 0; transition: opacity 0.2s; }
-.service-checkbox:checked + .service-card { border-color: var(--gold-accent); box-shadow: 0 10px 25px rgba(197, 160, 89, 0.15); background: #fffdf5; transform: translateY(-3px); }
+.service-checkbox:checked + .service-card { border-color: var(--gold-accent); box-shadow: 0 5px 15px rgba(197, 160, 89, 0.15); background: #fffdf5; transform: translateY(-2px); }
 .service-checkbox:checked + .service-card i { color: var(--gold-accent); }
 .service-checkbox:checked + .service-card h4 { color: var(--dark-text); }
 .service-checkbox:checked + .service-card .price { color: var(--gold-accent); font-weight: 700; }
 .service-checkbox:checked + .service-card::after { opacity: 1; }
 
-/* ADIM 3: TARİH & SAAT */
+/* Adım 3: Tarih & Saat */
 .date-scroll-wrapper { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; }
 .date-radio { display: none; }
 .date-card { min-width: 80px; padding: 15px 10px; text-align: center; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s; background: #fff; }
@@ -86,7 +141,7 @@ nav .nav-links a.active { color: var(--gold-accent); }
 .time-pill { padding: 10px; text-align: center; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-size: 14px; transition: all 0.2s; background: #fff; }
 .time-radio:checked + .time-pill { background: var(--dark-text); color: var(--gold-accent); border-color: var(--dark-text); }
 
-/* ADIM 4: ÖZET */
+/* Adım 4: Özet */
 .summary-box { background: #fdfdfd; border: 1px dashed var(--gold-accent); padding: 25px; border-radius: 8px; margin-bottom: 30px; }
 .summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 8px;}
 .summary-item:last-child { border-bottom: none; margin-bottom: 0; }
@@ -96,35 +151,75 @@ nav .nav-links a.active { color: var(--gold-accent); }
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: var(--dark-text); }
 .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 15px; transition: border 0.3s; }
-.form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--gold-accent); box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1); }
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--gold-accent); box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.1); }
 
 .wizard-footer { padding: 20px 40px 40px 40px; display: flex; justify-content: space-between; border-top: 1px solid #eee; }
 .btn-prev { padding: 12px 25px; border: 1px solid #ddd; background: #fff; color: #666; border-radius: 4px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
 .btn-next { padding: 12px 35px; background: var(--gold-accent); border: none; color: #fff; border-radius: 4px; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3); }
 .btn-next:hover { background: #b08d4e; transform: translateY(-2px); }
 
-footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: center; border-top: 4px solid var(--gold-accent); margin-top: 50px; position: relative; z-index: 10; }
+/* --- 5. FOOTER --- */
+footer { background: #1a1a1a; color: #fff; padding: 60px 5% 30px 5%; border-top: 3px solid var(--gold-accent); margin-top: auto; }
+.footer-container { display: flex; flex-direction: column; gap: 40px; text-align: center; max-width: 1200px; margin: 0 auto; }
+.footer-col h4 { color: var(--gold-accent); margin-bottom: 20px; font-size: 18px; font-family: 'Cinzel', serif; }
+.social-links { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+.social-links a { color: #fff; font-size: 20px; transition: 0.3s; }
+.social-links a:hover { color: var(--gold-accent); }
+.footer-bottom { border-top: 1px solid #333; margin-top: 30px; padding-top: 20px; }
 .admin-access-link { color: #444; font-size: 12px; text-decoration: none; transition: color 0.3s ease; }
 .admin-access-link:hover { color: var(--gold-accent); }
+
+/* --- 📱 MOBİL MEDYA SORGULARI --- */
+@media (max-width: 900px) {
+    .nav-links { display: none; } 
+    .hamburger { display: block; }
+    nav { padding: 15px 20px; }
+    
+    .booking-section { padding: 140px 15px 50px 15px; } /* Mobilde menü payı */
+    .step-content { padding: 25px 20px; }
+    
+    .staff-grid { gap: 15px; }
+    .staff-card { width: 100px; }
+    .staff-img-box { width: 80px; height: 80px; }
+    
+    .services-grid { grid-template-columns: 1fr; }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 
 <body>
 
 <canvas id="bg-canvas"></canvas>
-<i class="fas fa-scissors" style="display:none; font-family: 'Font Awesome 6 Free'; font-weight: 900;"></i>
 
 <nav>
     <a href="index.html" class="logo-container">
         <span class="logo-text">EREN KOZAN</span>
     </a>
+
     <div class="nav-links">
         <a href="employees.html">Çalışanlar</a>
         <a href="products.html">Ürünler</a>
+        <a href="index.html#gallery">Galeri</a>
         <a href="index.html#location">Konum</a>
         <a href="appointment.html" class="active">Randevu</a>
     </div>
+
+    <div class="hamburger" onclick="toggleMenu()">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="employees.html" onclick="toggleMenu()">Çalışanlar</a>
+    <a href="products.html" onclick="toggleMenu()">Ürünler</a>
+    <a href="index.html#gallery" onclick="toggleMenu()">Galeri</a>
+    <a href="index.html#location" onclick="toggleMenu()">Konum</a>
+    <a href="appointment.html" onclick="toggleMenu()" style="color:var(--gold-accent);">Randevu Al</a>
+</div>
 
 <section class="booking-section">
     <div class="booking-container">
@@ -184,17 +279,44 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
 </section>
 
 <footer>
-    <p>© 2025 Eren Kozan — Tüm Hakları Saklıdır</p>
-    <div class="admin-link-container"><a href="admin-login.html" class="admin-access-link"><i class="fas fa-lock"></i> Yönetici Girişi</a></div>
+    <div class="footer-container">
+        <div class="footer-col">
+            <h4>EREN KOZAN</h4>
+            <p style="color:#888;">Bursa'nın en prestijli erkek bakım merkezi.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p style="color:#555; font-size:12px;">© 2025 Eren Kozan</p>
+            <a href="admin-login.html" class="admin-access-link"><i class="fas fa-lock"></i> Yönetici Girişi</a>
+        </div>
+    </div>
 </footer>
 
 <script>
+    // 1. MOBİL MENÜ
+    function toggleMenu() {
+        document.getElementById('mobileMenu').classList.toggle('active');
+    }
+
+    // 2. NAVBAR SCROLL
+    const nav = document.querySelector('nav');
+    function changeNavColor() {
+        // Scrolled classı sadece padding küçültmek için kalır, renk sabit.
+        if (window.scrollY >= 50) nav.classList.add('scrolled'); 
+        else nav.classList.remove('scrolled');
+    }
+    window.addEventListener('scroll', changeNavColor);
+    window.addEventListener('load', changeNavColor);
+
     // --- ✂️ UÇAN MAKASLAR (ARKA PLAN) ✂️ ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
     let particles = [];
-    const particleCount = 20;
+    const particleCount = window.innerWidth < 768 ? 15 : 20;
 
     function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
     
@@ -224,7 +346,7 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
     window.addEventListener('resize', resize); document.fonts.ready.then(function () { initParticles(); });
 
 
-    // --- 📅 RANDEVU SİHİRBAZI MANTIĞI (SENIOR DOKUNUŞLAR) 📅 ---
+    // --- 📅 RANDEVU SİHİRBAZI MANTIĞI ---
     
     // MASTER HİZMET LİSTESİ
     const ALL_SERVICES_INFO = {
@@ -243,7 +365,6 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
     let currentStep = 1;
     const totalSteps = 4;
 
-    // YARDIMCI: Saat String -> Dakika (14:30 -> 870)
     function timeToMins(timeStr) {
         const [h, m] = timeStr.split(':').map(Number);
         return h * 60 + m;
@@ -254,14 +375,13 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
 
         if (currentStep === 1 && n === 1) { loadServicesForSelectedStaff(); }
         
-        // Adım 3'e geçerken saatleri hesapla
         if (currentStep === 2 && n === 1) { 
             setTimeout(() => {
                 const firstDate = document.querySelector('.date-radio');
                 if(firstDate && !document.querySelector('input[name="date"]:checked')) {
-                    firstDate.click(); // İlk günü otomatik seç
+                    firstDate.click(); 
                 } else {
-                    renderTimeSlots(); // Zaten seçiliyse saatleri yenile
+                    renderTimeSlots(); 
                 }
             }, 100);
         }
@@ -289,7 +409,6 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         }
     }
 
-    // --- ADIM 2: HİZMETLERİ GETİR ---
     function loadServicesForSelectedStaff() {
         const staffRadio = document.querySelector('input[name="staff"]:checked');
         const staffId = staffRadio.value;
@@ -326,7 +445,7 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         }
     }
 
-    // 🌟 SENIOR DOKUNUŞU: SAATLERİ RENDER ET (SABİT 1 SAAT BLOKLAMA) 🌟
+    // SAATLERİ RENDER ET (SABİT 1 SAAT BLOKLAMA)
     function renderTimeSlots() {
         const dateInput = document.querySelector('input[name="date"]:checked');
         const staffInput = document.querySelector('input[name="staff"]:checked');
@@ -338,73 +457,44 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         const timeContainer = document.getElementById('time-container');
         timeContainer.innerHTML = '';
 
-        // 1. MEŞGULİYET LİSTESİ HAZIRLA
         const allAppointments = JSON.parse(localStorage.getItem('appointments')) || [];
         const busyIntervals = [];
         
         allAppointments.filter(app => app.date === selectedDate && app.staff === selectedStaffName).forEach(app => {
             const startMins = timeToMins(app.time);
-            
-            // 🛑 KRİTİK DEĞİŞİKLİK BURADA:
-            // Hizmet süresi ne olursa olsun (duration), sistemi her randevuyu 
-            // SABİT 60 DAKİKA (1 Saat) yer kaplıyor gibi ayarladık.
-            const duration = 60; 
-            
+            const duration = 60; // Sabit bloklama
             busyIntervals.push({ start: startMins, end: startMins + duration });
         });
 
-        // 2. BUGÜNÜN ZAMANI (Geçmiş saatleri engellemek için)
         const now = new Date();
-        // Yerel saat düzeltmesi (Timezone)
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
         const todayStr = `${year}-${month}-${day}`;
-        
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
         const isToday = (selectedDate === todayStr);
 
-        // 3. MESAİ SAATLERİ (10:00 - 22:00)
         const startHour = 10;
         const endHour = 22;
-        // Kapanışa 1 saat kala (21:00) son randevu alınabilir (22:00'da biter)
-        // Eğer 21:30'a randevu verilirse 22:30'da biter, bunu engellemek istersen aşağıyı ayarlarız.
-        // Şimdilik sadece kapanış saatini sınır alıyoruz.
         const shopClosingMins = endHour * 60; 
 
         for (let h = startHour; h < endHour; h++) {
             ['00', '30'].forEach(m => {
                 const timeStr = `${h}:${m}`;
                 const slotStart = timeToMins(timeStr);
-                // Yeni randevu da standart 60 dk sürecek kabul ediyoruz (Çakışma kontrolü için)
                 const slotEnd = slotStart + 60; 
 
                 let isBlocked = false;
 
-                // KONTROL A: GEÇMİŞ ZAMAN MI?
-                if (isToday && slotStart <= currentMinutes) {
-                    isBlocked = true;
-                }
+                if (isToday && slotStart <= currentMinutes) isBlocked = true;
+                if (slotEnd > shopClosingMins) isBlocked = true;
 
-                // KONTROL B: KAPANIŞ SAATİNİ GEÇİYOR MU? (22:00'da dükkan kapanıyorsa en son randevu 21:00 olur)
-                if (slotEnd > shopClosingMins) {
-                    isBlocked = true;
-                }
-
-                // KONTROL C: BAŞKA RANDEVUYLA ÇAKIŞIYOR MU? (1 SAAT ARAYLA)
                 if (!isBlocked) {
                     for (let interval of busyIntervals) {
-                        // Eğer bu saat dilimi, dolu olan bir aralığın içine denk geliyorsa kapat.
-                        // Örn: Dolu [14:30 - 15:30]. Slot: 15:00.
-                        // 15:00 >= 14:30 VE 15:00 < 15:30 -> EVET, ÇAKIŞIYOR.
                         if (slotStart >= interval.start && slotStart < interval.end) {
                             isBlocked = true;
                             break;
                         }
-                        
-                        // Ayrıca, yeni alacağımız randevu (60dk) mevcut bir randevunun üstüne biniyor mu?
-                        // Örn: Dolu [15:00 - 16:00]. Slot: 14:30 (Bitişi 15:30).
-                        // 14:30 < 15:00 AMA 15:30 > 15:00 -> EVET, ÇAKIŞIYOR.
                         if (slotStart < interval.start && slotEnd > interval.start) {
                             isBlocked = true;
                             break;
@@ -430,7 +520,6 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         if(e.target.name === 'date') renderTimeSlots();
     });
 
-    // VALİDASYON
     function validateStep(step) {
         if (step === 1) {
             const selected = document.querySelector('input[name="staff"]:checked');
@@ -450,7 +539,6 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         return true;
     }
 
-    // ÖZET
     function updateSummary() {
         const staffName = document.querySelector('input[name="staff"]:checked').getAttribute('data-name');
         
@@ -463,7 +551,6 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
             const key = cb.value;
             const info = ALL_SERVICES_INFO[key];
             const price = parseInt(cb.getAttribute('data-price'));
-            
             if(info) {
                 serviceNames.push(info.name);
                 totalDuration += info.duration;
@@ -481,9 +568,7 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         document.getElementById('sum-price').textContent = `${totalPrice} ₺`;
     }
 
-    // SAYFA YÜKLENİNCE
     document.addEventListener('DOMContentLoaded', () => {
-        // BERBERLER
         const staffContainer = document.getElementById('staff-grid-container');
         const teamData = JSON.parse(localStorage.getItem('teamData')) || [];
         
@@ -506,16 +591,13 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
             });
         }
 
-        // TARİHLER (14 GÜN - PAZAR HARİÇ)
         const dateContainer = document.getElementById('date-container');
         const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
         let daysAdded = 0; let i = 0;
         while (daysAdded < 14) {
             const d = new Date(); d.setDate(d.getDate() + i); i++;
-            // Pazar Günü Kontrolü (0 = Pazar)
             if (d.getDay() === 0) continue; 
             
-            // Yerel saate göre YYYY-MM-DD formatı veren güvenli fonksiyon
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
@@ -530,7 +612,6 @@ footer { background: #1a1a1a; color: #fff; padding: 40px 20px; text-align: cente
         }
     });
 
-    // FORM GÖNDERME
     function submitForm() {
         const fullname = document.getElementById('fullname').value;
         const phone = document.getElementById('phone').value;
