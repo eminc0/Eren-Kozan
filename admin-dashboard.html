@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yönetim Paneli | Eren Kozan</title>
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c5a059">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Eren Kozan Panel">
+<link rel="apple-touch-icon" href="img/erenkozanlogo_white.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -88,7 +95,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 /* CALENDAR MATRIX (MASAÜSTÜ) */
 .calendar-controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
 .matrix-table { width: 100%; border-collapse: separate; border-spacing: 4px; }
-.matrix-table th { background: #333; color: var(--gold); text-align: center; padding: 10px; border-radius: 4px; }
+.matrix-table th { background: #333; color: var(--gold); text-align: center; padding: 10px; border-radius: 4px; position: sticky; top: 0; }
 .matrix-table td { padding: 0; }
 .slot-btn { width: 100%; padding: 12px 5px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; height: 60px; }
 .slot-empty { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3); }
@@ -97,21 +104,23 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .slot-time { font-size: 10px; opacity: 0.7; }
 .slot-status { font-size: 13px; }
 
-/* CALENDAR MOBİL (YENİ EKLEME) */
+/* CALENDAR MOBİL (HİBRİT) */
 #mobileCalendarView { display: none; } /* Masaüstünde gizli */
-.mobile-staff-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
+.mobile-staff-list { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
 .mobile-staff-card { 
     min-width: 100px; background: #2a2a2a; border: 1px solid var(--border); 
     border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; 
-    transition: all 0.2s; opacity: 0.7; 
+    transition: all 0.2s; opacity: 0.7; flex-shrink: 0;
 }
-.mobile-staff-card.active { border-color: var(--gold); opacity: 1; background: rgba(197, 160, 89, 0.1); }
-.mobile-staff-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
-.mobile-staff-name { font-size: 12px; font-weight: 600; color: #fff; }
+.mobile-staff-card.active { border-color: var(--gold); opacity: 1; background: rgba(197, 160, 89, 0.1); transform: scale(1.05); }
+.mobile-staff-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 2px solid transparent; }
+.mobile-staff-card.active img { border-color: var(--gold); }
+.mobile-staff-name { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.mobile-slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+.mobile-slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
 .mobile-slot { 
-    padding: 15px 5px; border-radius: 6px; text-align: center; font-size: 13px; font-weight: 600; 
+    padding: 10px 5px; border-radius: 6px; text-align: center; font-size: 12px; font-weight: 600; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; height: 50px;
 }
 
 /* MODAL */
@@ -196,8 +205,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         <div class="menu-item" onclick="showSection('calendar'); toggleSidebar();"><i class="fas fa-calendar-alt"></i> Takvim</div>
         <div class="menu-item" onclick="showSection('employees'); toggleSidebar();"><i class="fas fa-user-tie"></i> Çalışanlar</div>
         <div class="menu-item" onclick="showSection('products'); toggleSidebar();"><i class="fas fa-box-open"></i> Ürünler</div>
-        <div class="menu-item" onclick="showSection('reviews'); toggleSidebar();"><i class="fas fa-star"></i> Yorumlar</div>
-    </div>
+        </div>
     <div class="sidebar-footer">
         <button onclick="resetSystem()" class="btn-reset"><i class="fas fa-trash-alt"></i> Sistemi Sıfırla</button>
         <a href="index.html" target="_blank" class="menu-item"><i class="fas fa-external-link-alt"></i> Siteye Git</a>
@@ -287,7 +295,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
             <div id="mobileCalendarView">
                 <div class="mobile-staff-list" id="mobileStaffList"></div>
                 <div class="mobile-slots-grid" id="mobileSlotsGrid">
-                    <p style="color:#666; text-align:center; grid-column:1/-1;">Lütfen bir personel seçiniz.</p>
+                    <p style="color:#666; text-align:center; grid-column:1/-1;">Lütfen yukarıdan bir personel seçiniz.</p>
                 </div>
             </div>
         </div>
@@ -353,28 +361,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         </div>
     </section>
 
-    <section id="reviews" class="section">
-        <div class="page-header">
-            <div class="header-left">
-                <button class="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-                <h1 class="page-title">Yorum Yönetimi</h1>
-            </div>
-        </div>
-        <div class="card-panel">
-            <div class="panel-header"><h3 class="panel-title">Yorum Ekle</h3></div>
-            <form id="reviewForm" class="form-grid">
-                <div class="form-group"><label>Ad Soyad</label><input type="text" id="revName" class="form-input" required></div>
-                <div class="form-group"><label>Ünvan (Örn: VIP)</label><input type="text" id="revTitle" class="form-input" required></div>
-                <div class="form-group"><label>Puan</label><select id="revRating" class="form-input"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option></select></div>
-                <div class="form-group" style="grid-column: 1 / -1;"><label>Yorum</label><textarea id="revComment" class="form-input" rows="2" required></textarea></div>
-                <div style="grid-column: 1 / -1;"><button type="submit" class="btn btn-primary" style="width:100%;">Yorumu Yayınla</button></div>
-            </form>
-        </div>
-        <div class="card-panel">
-            <table><thead><tr><th>Müşteri</th><th>Puan</th><th>Yorum</th><th>İşlem</th></tr></thead><tbody id="review-table-body"></tbody></table>
-        </div>
-    </section>
-
 </main>
 
 <div id="modalAppt" class="modal-overlay">
@@ -392,6 +378,17 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 </div>
 
 <script>
+    // --- PWA SERVICE WORKER KAYDI ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js').then(function(registration) {
+                console.log('ServiceWorker başarıyla kaydedildi: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker kaydı başarısız: ', err);
+            });
+        });
+    }
+
     // --- TEMEL ---
     if (!localStorage.getItem('isAdminLoggedIn')) window.location.href = 'admin-login.html';
     
@@ -412,7 +409,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         renderReports();
         renderEmployees();
         renderProducts();
-        renderReviews();
+        // Yorumlar kaldırıldı
     });
 
     // --- MENÜ GEÇİŞİ VE HAMBURGER ---
@@ -427,7 +424,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         if(id === 'calendar') renderMatrix();
         if(id === 'employees') renderEmployees();
         if(id === 'products') renderProducts();
-        if(id === 'reviews') renderReviews();
+        // Yorumlar kaldırıldı
     }
 
     function toggleSidebar() {
@@ -810,30 +807,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         alert("Ürün eklendi!");
     });
 
-    // --- 6. YORUMLAR ---
-    function renderReviews() {
-        const list = getData('siteReviews');
-        const tbody = document.getElementById('review-table-body');
-        tbody.innerHTML = '';
-        list.forEach((rev, index) => {
-            tbody.innerHTML += `<tr><td><div style="font-weight:bold;">${rev.name}</div><div style="font-size:11px; color:#888;">${rev.type}</div></td><td style="color:var(--gold);">${'★'.repeat(rev.rating)}</td><td style="font-size:12px;">"${rev.comment}"</td><td><button class="btn-icon btn-trash" onclick="deleteItem('siteReviews', ${index})"><i class="fas fa-trash"></i></button></td></tr>`;
-        });
-    }
-    document.getElementById('reviewForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const list = getData('siteReviews');
-        list.push({
-            name: document.getElementById('revName').value,
-            type: document.getElementById('revTitle').value,
-            rating: document.getElementById('revRating').value,
-            comment: document.getElementById('revComment').value
-        });
-        saveData('siteReviews', list);
-        renderReviews();
-        e.target.reset();
-        alert("Yorum yayınlandı!");
-    });
-
     // --- ORTAK ---
     function deleteItem(key, index) {
         if(confirm("Silmek istediğine emin misin?")) {
@@ -842,7 +815,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
             saveData(key, list);
             if(key === 'teamData') renderEmployees();
             if(key === 'productData') renderProducts();
-            if(key === 'siteReviews') renderReviews();
             updateDashboard();
         }
     }
