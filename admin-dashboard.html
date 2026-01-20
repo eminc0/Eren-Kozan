@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yönetim Paneli | Eren Kozan</title>
 
-<link rel="manifest" href="./manifest.json">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#c5a059">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Eren Kozan Panel">
-<link rel="apple-touch-icon" href="./erenkozanlogo_white.png">
+<link rel="apple-touch-icon" href="img/erenkozanlogo_white.png">
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"> 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -361,7 +361,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         </div>
     </section>
 
-    </main>
+</main>
 
 <div id="modalAppt" class="modal-overlay">
     <div class="modal-box">
@@ -378,10 +378,10 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 </div>
 
 <script>
-    // --- PWA SERVICE WORKER KAYDI (DÜZELTİLDİ: ./sw.js) ---
+    // --- PWA SERVICE WORKER KAYDI ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-            navigator.serviceWorker.register('./sw.js').then(function(registration) {
+            navigator.serviceWorker.register('sw.js').then(function(registration) {
                 console.log('ServiceWorker başarıyla kaydedildi: ', registration.scope);
             }, function(err) {
                 console.log('ServiceWorker kaydı başarısız: ', err);
@@ -409,6 +409,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         renderReports();
         renderEmployees();
         renderProducts();
+        // Yorumlar kaldırıldı
     });
 
     // --- MENÜ GEÇİŞİ VE HAMBURGER ---
@@ -423,6 +424,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         if(id === 'calendar') renderMatrix();
         if(id === 'employees') renderEmployees();
         if(id === 'products') renderProducts();
+        // Yorumlar kaldırıldı
     }
 
     function toggleSidebar() {
